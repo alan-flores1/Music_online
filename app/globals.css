@@ -1,0 +1,140 @@
+.dogcat,
+.carrito {
+  filter: brightness(0) invert(1);
+}
+
+.carousel-item img {
+  height: 500px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.footer {
+  background-color: #28242c;
+  color: #fff;
+  padding: 50px 20px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-col h2.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.footer-col h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.footer-col p {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-col ul li a:hover {
+  color: #aaa;
+}
+
+.socials a {
+  display: inline-block;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.socials a:hover {
+  color: #aaa;
+}
+
+.copyright {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 0.85rem;
+  border-top: 1px solid #222;
+  padding-top: 15px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+section.about {
+  margin: 60px 0;
+  padding: 0 40px;
+}
+
+section.about h2 {
+  margin-bottom: 30px;
+}
+
+section.about p {
+  margin-bottom: 25px;
+  line-height: 1.8;
+}
+
+footer.footer {
+  margin-top: 60px;
+  padding: 40px 20px;
+  background-color: #111;
+}
+
+footer.footer .footer-col {
+  margin-bottom: 30px;
+}
+
+footer.footer .copyright {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.carrito {
+  margin-left: 10px;
+}
+
+.compact-card {
+  width: 240px;
+  height: 400px;
+  overflow: hidden;
+}
+
+.compact-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
