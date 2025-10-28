@@ -42,36 +42,43 @@ export default function HomePage() {
           </Nav>
         </Container>
       </Navbar>
+      
+      <section className="about py-5">
+      <div className="container">
+        <h1 className="text-center fw-bold mb-5">Sobre Nosotros</h1>
 
-      <section className="py-5 bg-auto">
-        <Container>
-          <Row className="align-items-center">
-            <Col md={6}>
-              <h2 className="fw-bold">TIENDA FÍSICA DE MÚSICA</h2>
-              <p>
-                🎶 “En nuestra tienda la música no es solo un producto, es una
-                experiencia. Cada vinilo, cada CD y cada objeto tiene una
-                historia que conecta pasado y presente. Somos un espacio para
-                melómanos, coleccionistas y soñadores, donde la pasión por el
-                sonido se transforma en comunidad. Aquí la música se vive, se
-                toca y se comparte.” 🎶
-              </p>
-              <Link href="/Productos" className="btn btn-danger">
-                Ver Productos
-              </Link>
-            </Col>
-            <Col md={6} className="text-center">
-              <Image
-                src="/images/fondo.jpg"
-                alt="Imagen Tienda"
-                width={600}
-                height={400}
-                className="img-fluid border"
-              />
-            </Col>
-          </Row>
-        </Container>
-      </section>
+        <div className="row align-items-center">
+          <div className="col-md-6 mb-4">
+            <img
+              src="/images/grupo.jpeg"
+              className="img-fluid rounded shadow"
+              alt="Nuestra Tienda"
+            />
+          </div>
+
+          <div className="col-md-6">
+            <h2 className="fw-bold">¿Qué es Music Online?</h2>
+            <p>
+              En <strong>Music Online</strong> creemos que los formatos físicos
+              son mucho más que un medio: son nuestra historia, nostalgia y
+              cultura. Desde vinilos hasta CDs, cada pieza conecta generaciones
+              y revive momentos únicos.
+            </p>
+            <p>
+              Nos enfocamos en ofrecer una experiencia auténtica para melómanos
+              y coleccionistas. Queremos que cada visita sea un viaje al mundo
+              del sonido, donde cada pieza tenga un valor especial.
+            </p>
+            <p>
+              Nuestra misión es mantener viva la magia de la música física en
+              una era digital, creando un espacio para quienes buscan algo más
+              que solo escuchar: <em>coleccionar</em>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
       <footer className="footer bg-dark text-white py-4 mt-5">
         <Container>
           <Row>

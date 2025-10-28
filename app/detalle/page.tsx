@@ -1,16 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Navbar,
   Nav,
   Container,
   Row,
   Col,
-  Carousel,
   Card,
   Button,
+  Carousel,
 } from "react-bootstrap";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,75 +23,6 @@ interface Producto {
   imagenes: string[];
   descripcion: string;
 }
-
-function agregarCarrito(id: number, cantidad = 1) {
-  let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
-  let producto = productos.find((p) => p.id === id);
-  if (!producto) return alert("Producto no encontrado");
-
-  let existente = carrito.find((p: any) => p.id === id);
-  if (existente) existente.cantidad += cantidad;
-  else carrito.push({ ...producto, cantidad });
-
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-  alert(`${producto.nombre} (x${cantidad}) añadido al carrito ✅`);
-}
-
-function CarouselCategoria({ categoria }: { categoria: string }) {
-  const lista = productos.filter((p) => p.categoria === categoria);
-
-  // dividir lista en grupos de 4 productos
-  const slides: any[] = [];
-  for (let i = 0; i < lista.length; i += 4) {
-    slides.push(lista.slice(i, i + 4));
-  }
-
-  return (
-    <div className="mb-5">
-      <h3 className="text-light mb-3">{categoria}</h3>
-      <Carousel interval={4000} indicators={false} pause={false}>
-        {slides.map((slide, index) => (
-          <Carousel.Item key={index}>
-            <Row className="justify-content-center">
-              {slide.map((p: Producto) => (
-                <Col key={p.id} xs={6} sm={4} md={3} lg={2}>
-                  <Card className="compact-card h-100 bg-dark text-light">
-                    <Card.Img
-                      variant="top"
-                      src={p.imagenes[0]}
-                      alt={p.nombre}
-                      style={{ height: 200, objectFit: "cover" }}
-                    />
-                    <Card.Body className="text-center p-2">
-                      <Card.Title as="h6">{p.nombre}</Card.Title>
-                      <Card.Text>${p.precio}</Card.Text>
-                      <div className="d-flex justify-content-center gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          href={`/detalle?id=${p.id}`}
-                        >
-                          Ver detalle
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => agregarCarrito(p.id)}
-                        >
-                          Comprar
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Carousel.Item>
-        ))}
-      </Carousel>
-    </div>
-  );
-} //
 
 const productos: Producto[] = [
   {
@@ -383,10 +315,47 @@ const productos: Producto[] = [
   },
 ];
 
-export default function ProductosPage() {
+export default function DetallePage() {
+  const searchParams = useSearchParams();
+  const idParam = searchParams.get("id");
+  const [producto, setProducto] = useState<Producto | null>(null);
+  const [otros, setOtros] = useState<Producto[]>([]);
+
+  useEffect(() => {
+    if (!idParam) return;
+
+    const id = parseInt(idParam);
+    const encontrado = productos.find((p) => p.id === id);
+    setProducto(encontrado || null);
+
+    const relacionados = productos
+      .filter((p) => p.id !== id)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
+
+    setOtros(relacionados);
+  }, [idParam]);
+
+  function agregarCarrito(id: number, cantidad = 1) {
+    let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
+    let producto = productos.find((p) => p.id === id);
+    if (!producto) return alert("Producto no encontrado");
+
+    let existente = carrito.find((p: any) => p.id === id);
+    if (existente) existente.cantidad += cantidad;
+    else carrito.push({ ...producto, cantidad });
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    alert(`${producto.nombre} (x${cantidad}) añadido al carrito ✅`);
+  }
+
+  if (!producto)
+    return <p className="text-center text-light mt-5">Cargando...</p>;
+
   return (
     <>
-      <Navbar bg="dark" data-bs-theme="dark">
+      {/* NAVBAR */}
+      <Navbar bg="dark" data-bs-theme="dark" expand="lg">
         <Container>
           <Link href="/" className="navbar-brand d-flex align-items-center">
             <Image
@@ -397,89 +366,101 @@ export default function ProductosPage() {
               className="me-2"
             />
           </Link>
-          <Navbar.Brand href="/ ">Inicio</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/productos">Productos</Nav.Link>
-            <Nav.Link href="/nosotros">Nosotros</Nav.Link>
-            <Nav.Link href="/blog">Blog</Nav.Link>
-            <Nav.Link href="/contacto">Contacto</Nav.Link>
-          </Nav>
-
-          <Nav className="ms-auto">
-            <Link href="/sesion" className="nav-link">
-              Inicio de sesión
-            </Link>
-            <Link href="/carrito" className="nav-link p-0">
-              <Image
-                src="/images/carrito.png"
-                alt="Carrito"
-                width={30}
-                height={30}
-                className="carrito"
-              />
-            </Link>
-          </Nav>
+          <Navbar.Toggle aria-controls="navbar-nav" />
+          <Navbar.Collapse id="navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/">Inicio</Nav.Link>
+              <Nav.Link href="/productos">Productos</Nav.Link>
+              <Nav.Link href="/nosotros">Nosotros</Nav.Link>
+              <Nav.Link href="/blog">Blog</Nav.Link>
+              <Nav.Link href="/contacto">Contacto</Nav.Link>
+            </Nav>
+            <Nav className="ms-auto align-items-center">
+              <Link href="/sesion" className="nav-link">
+                Inicio de sesión
+              </Link>
+              <Link href="/carrito" className="nav-link p-0">
+                <Image
+                  src="/images/carrito.png"
+                  alt="Carrito"
+                  width={30}
+                  height={30}
+                  className="carrito"
+                />
+              </Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      <section
-        style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
-      >
+      {/* DETALLE PRODUCTO */}
+      <section className="bg-black text-white py-5">
         <Container>
-          <CarouselCategoria categoria="Vinilos" />
-          <CarouselCategoria categoria="CDs" />
-          <CarouselCategoria categoria="Accesorios" />
+          <Row className="align-items-center">
+            <Col md={6}>
+              <Carousel>
+                {producto.imagenes.map((img, i) => (
+                  <Carousel.Item key={i}>
+                    <img
+                      src={img}
+                      alt={producto.nombre}
+                      className="d-block w-100"
+                      style={{
+                        height: 400,
+                        objectFit: "contain",
+                        borderRadius: "10px",
+                      }}
+                    />
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            </Col>
+
+            <Col md={6} className="text-light">
+              <h2>{producto.nombre}</h2>
+              <h4 className="text-danger mb-3">${producto.precio}</h4>
+              <p>{producto.descripcion}</p>
+              <Button
+                variant="danger"
+                size="lg"
+                className="mt-3"
+                onClick={() => agregarCarrito(producto.id)}
+              >
+                Añadir al carrito 🛒
+              </Button>
+            </Col>
+          </Row>
         </Container>
       </section>
 
-      <footer className="footer bg-dark text-white py-4 mt-5">
+      {/* OTROS PRODUCTOS */}
+      <section>
         <Container>
-          <Row>
-            <Col md={3}>
-              <h2 className="logo">Tienda</h2>
-              <p>
-                Tienda enfocada en conectar a las personas con la música.
-                Vinilos, CDs, Blurays y objetos para melómanos.
-              </p>
-            </Col>
-
-            <Col md={3}>
-              <h3>Enlaces</h3>
-              <ul className="list-unstyled">
-                <li>
-                  <Link href="/">Inicio</Link>
-                </li>
-                <li>
-                  <Link href="/Productos">Productos</Link>
-                </li>
-                <li>
-                  <Link href="/Contacto">Sobre Nosotros</Link>
-                </li>
-              </ul>
-            </Col>
-
-            <Col md={3}>
-              <h3>Contacto</h3>
-              <p>📧 contacto@tienda.cl</p>
-              <p>📞 +56 2 2222 3333</p>
-            </Col>
-
-            <Col md={3}>
-              <h3>Síguenos</h3>
-              <div className="d-flex flex-column">
-                <a href="#">Facebook</a>
-                <a href="#">Instagram</a>
-              </div>
-            </Col>
+          <h3 className="mb-4">Otros productos</h3>
+          <Row className="g-3">
+            {otros.map((p) => (
+              <Col key={p.id} xs={6} md={3}>
+                <Card className="h-100 bg-light text-dark">
+                  <Card.Img
+                    variant="top"
+                    src={p.imagenes[0]}
+                    style={{ height: 200, objectFit: "cover" }}
+                  />
+                  <Card.Body className="text-center">
+                    <Card.Title>{p.nombre}</Card.Title>
+                    <Card.Text>${p.precio}</Card.Text>
+                    <Link href={`/detalle?id=${p.id}`}>
+                      <Button variant="danger" size="sm">
+                        Ver detalle
+                      </Button>
+                    </Link>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
-
-          <div className="text-center mt-4 border-top pt-3">
-            <p className="mb-0">
-              &copy; 2025 Tienda. Todos los derechos reservados.
-            </p>
-          </div>
         </Container>
-      </footer>
+      </section>
     </>
   );
 }
