@@ -9,6 +9,7 @@ import {
   Carousel,
   Card,
   Button,
+  NavDropdown,
 } from "react-bootstrap";
 
 import Image from "next/image";
@@ -386,9 +387,12 @@ const productos: Producto[] = [
 export default function ProductosPage() {
   return (
     <>
-      <Navbar bg="dark" data-bs-theme="dark">
-        <Container>
-          <Link href="/" className="navbar-brand d-flex align-items-center">
+      <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
+        <Container fluid>
+          <Link
+            href="/"
+            className="navbar-brand d-flex align-items-center me-3"
+          >
             <Image
               src="/images/Icono.png"
               alt="Logo"
@@ -397,30 +401,42 @@ export default function ProductosPage() {
               className="me-2"
             />
           </Link>
-          <Navbar.Brand href="/ ">Inicio</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/productos" className="active">
-              Productos{" "}
-            </Nav.Link>
-            <Nav.Link href="/nosotros">Nosotros</Nav.Link>
-            <Nav.Link href="/blog">Blog</Nav.Link>
-            <Nav.Link href="/contacto">Contacto</Nav.Link>
-          </Nav>
 
-          <Nav className="ms-auto">
-            <Link href="/sesion" className="nav-link">
-              Inicio de sesión
-            </Link>
-            <Link href="/carrito" className="nav-link p-0">
-              <Image
-                src="/images/carrito.png"
-                alt="Carrito"
-                width={30}
-                height={30}
-                className="carrito"
-              />
-            </Link>
-          </Nav>
+          <Navbar.Toggle aria-controls="navbarNav" />
+          <Navbar.Collapse id="navbarNav">
+            <Nav className="me-auto d-flex align-items-center">
+              <Nav.Link href="/" className="">
+                Inicio
+              </Nav.Link>
+              <Nav.Link href="/productos" className="active">
+                Productos
+              </Nav.Link>
+              <Nav.Link href="/nosotros" className="">
+                Nosotros
+              </Nav.Link>
+              <Nav.Link href="/blog" className="">
+                Blog
+              </Nav.Link>
+              <Nav.Link href="/contacto" className="">
+                Contacto
+              </Nav.Link>
+            </Nav>
+
+            <Nav className="ms-auto align-items-center gap-3">
+              <Link href="/sesion" className="nav-link">
+                Inicio de sesión
+              </Link>
+              <Link href="/carrito" className="nav-link p-0">
+                <Image
+                  src="/images/carrito.png"
+                  alt="Carrito"
+                  width={28}
+                  height={28}
+                  className="carrito"
+                />
+              </Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
