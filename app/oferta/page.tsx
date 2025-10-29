@@ -8,6 +8,7 @@ import {
   Col,
   Card,
   Button,
+  NavDropdown,
 } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
@@ -101,12 +102,36 @@ export default function OfertaPage() {
           <Navbar.Toggle aria-controls="navbarNav" />
           <Navbar.Collapse id="navbarNav">
             <Nav className="me-auto d-flex align-items-center">
-              <Nav.Link href="/">Inicio</Nav.Link>
-              <Nav.Link href="/productos">Productos</Nav.Link>
-              <Nav.Link href="/nosotros">Nosotros</Nav.Link>
-              <Nav.Link href="/blog">Blog</Nav.Link>
-              <Nav.Link href="/contacto">Contacto</Nav.Link>
-              <Nav.Link href="/ofertas" className="active">
+              <Nav.Link href="/" className="">
+                Inicio
+              </Nav.Link>
+              <NavDropdown
+                title="Productos"
+                id="productos-dropdown"
+                menuVariant="dark"
+                className="text-light"
+                style={{
+                  color: "#fff",
+                }}
+              >
+                 <NavDropdown.Item href="/productos#vinilos">
+                  Vinilos
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="/productos#accesorios">
+                  Accesorios
+                </NavDropdown.Item>
+              </NavDropdown>
+              <Nav.Link href="/nosotros" className="">
+                Nosotros
+              </Nav.Link>
+              <Nav.Link href="/blog" className="">
+                Blog
+              </Nav.Link>
+              <Nav.Link href="/contacto" className="">
+                Contacto
+              </Nav.Link>
+              <Nav.Link href="/oferta" className="active">
                 Ofertas
               </Nav.Link>
             </Nav>

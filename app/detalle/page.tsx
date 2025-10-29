@@ -11,6 +11,7 @@ import {
   Card,
   Button,
   Carousel,
+  NavDropdown,
 } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
@@ -354,7 +355,6 @@ export default function DetallePage() {
 
   return (
     <>
-      {/* NAVBAR */}
       <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
         <Container fluid>
           <Link
@@ -376,17 +376,34 @@ export default function DetallePage() {
               <Nav.Link href="/" className="">
                 Inicio
               </Nav.Link>
-              <Nav.Link href="/productos" className="active">
-                Productos
-              </Nav.Link>
+              <NavDropdown
+                title="Productos"
+                id="productos-dropdown"
+                menuVariant="dark"
+                className="text-light"
+                style={{
+                  color: "#fff",
+                }}
+              >
+                <NavDropdown.Item href="/productos#vinilos">
+                  Vinilos
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="/productos#accesorios">
+                  Accesorios
+                </NavDropdown.Item>
+              </NavDropdown>
               <Nav.Link href="/nosotros" className="">
                 Nosotros
               </Nav.Link>
-              <Nav.Link href="/blog" className="">
+              <Nav.Link href="/blog" className="active">
                 Blog
               </Nav.Link>
               <Nav.Link href="/contacto" className="">
                 Contacto
+              </Nav.Link>
+              <Nav.Link href="/oferta" className="">
+                Ofertas
               </Nav.Link>
             </Nav>
 
@@ -408,7 +425,6 @@ export default function DetallePage() {
         </Container>
       </Navbar>
 
-      {/* DETALLE PRODUCTO */}
       <section className="bg-black text-white py-5">
         <Container>
           <Row className="align-items-center">
@@ -448,7 +464,6 @@ export default function DetallePage() {
         </Container>
       </section>
 
-      {/* OTROS PRODUCTOS */}
       <section>
         <Container>
           <h3 className="mb-4">Otros productos</h3>

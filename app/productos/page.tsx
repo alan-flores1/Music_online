@@ -436,7 +436,7 @@ export default function ProductosPage() {
                 Contacto
               </Nav.Link>
               <Nav.Link href="/oferta" className="">
-                Oferta
+                Ofertas
               </Nav.Link>
             </Nav>
 

@@ -170,3 +170,12 @@ section.about {
   padding: 80px 40px;
   background-color: black;
 }
+footer a {
+  color: #dc3545; /* rojo tipo Bootstrap 'danger' */
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #ff6b6b; /* tono más claro al pasar el mouse */
+  text-decoration: underline;
+}

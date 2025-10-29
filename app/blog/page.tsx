@@ -40,24 +40,29 @@ export default function BlogPage() {
                 title="Productos"
                 id="productos-dropdown"
                 menuVariant="dark"
-                className="active"
+                className="text-light"
+                style={{
+                  color: "#fff",
+                }}
               >
-                <NavDropdown.Item href="#vinilos">Vinilos</NavDropdown.Item>
-                <NavDropdown.Item href="#cds">CDs</NavDropdown.Item>
-                <NavDropdown.Item href="#accesorios">
+                <NavDropdown.Item href="/productos#vinilos">
+                  Vinilos
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="/productos#accesorios">
                   Accesorios
                 </NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="/nosotros" className="">
                 Nosotros
               </Nav.Link>
-              <Nav.Link href="/blog" className="">
+              <Nav.Link href="/blog" className="active">
                 Blog
               </Nav.Link>
               <Nav.Link href="/contacto" className="">
                 Contacto
               </Nav.Link>
-              <Nav.Link href="/oferta" className="active">
+              <Nav.Link href="/oferta" className="">
                 Ofertas
               </Nav.Link>
             </Nav>

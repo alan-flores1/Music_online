@@ -33,12 +33,15 @@ export default function HomePage() {
                 id="productos-dropdown"
                 menuVariant="dark"
                 className="text-light"
+                style={{
+                  color: "#fff",
+                }}
               >
                 <NavDropdown.Item href="/productos#vinilos">
                   Vinilos
                 </NavDropdown.Item>
                 <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
-                <NavDropdown.Item href="/productos#cds">
+                <NavDropdown.Item href="/productos#accesorios">
                   Accesorios
                 </NavDropdown.Item>
               </NavDropdown>
@@ -50,6 +53,9 @@ export default function HomePage() {
               </Nav.Link>
               <Nav.Link href="/contacto" className="">
                 Contacto
+              </Nav.Link>
+              <Nav.Link href="/oferta" className="">
+                Ofertas
               </Nav.Link>
             </Nav>
 
