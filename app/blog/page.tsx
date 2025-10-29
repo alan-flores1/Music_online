@@ -1,6 +1,14 @@
 "use client";
 
-import { Navbar, Nav, Container, Row, Col, Card } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Row,
+  Col,
+  Card,
+  NavDropdown,
+} from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,17 +36,29 @@ export default function BlogPage() {
               <Nav.Link href="/" className="">
                 Inicio
               </Nav.Link>
-              <Nav.Link href="/productos" className="">
-                Productos
-              </Nav.Link>
+              <NavDropdown
+                title="Productos"
+                id="productos-dropdown"
+                menuVariant="dark"
+                className="active"
+              >
+                <NavDropdown.Item href="#vinilos">Vinilos</NavDropdown.Item>
+                <NavDropdown.Item href="#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="#accesorios">
+                  Accesorios
+                </NavDropdown.Item>
+              </NavDropdown>
               <Nav.Link href="/nosotros" className="">
                 Nosotros
               </Nav.Link>
-              <Nav.Link href="/blog" className="active">
+              <Nav.Link href="/blog" className="">
                 Blog
               </Nav.Link>
               <Nav.Link href="/contacto" className="">
                 Contacto
+              </Nav.Link>
+              <Nav.Link href="/oferta" className="active">
+                Ofertas
               </Nav.Link>
             </Nav>
 

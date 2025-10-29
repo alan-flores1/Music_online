@@ -38,9 +38,12 @@ function agregarCarrito(id: number, cantidad = 1) {
 }
 
 function CarouselCategoria({ categoria }: { categoria: string }) {
-  const lista = productos.filter((p) => p.categoria === categoria);
+  const idsEnOferta = [1, 9, 17];
 
-  // dividir lista en grupos de 4 productos
+  const lista = productos.filter(
+    (p) => p.categoria === categoria && !idsEnOferta.includes(p.id)
+  );
+
   const slides: any[] = [];
   for (let i = 0; i < lista.length; i += 4) {
     slides.push(lista.slice(i, i + 4));
@@ -91,7 +94,7 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
       </Carousel>
     </div>
   );
-} //
+}
 
 const productos: Producto[] = [
   {
@@ -408,9 +411,21 @@ export default function ProductosPage() {
               <Nav.Link href="/" className="">
                 Inicio
               </Nav.Link>
-              <Nav.Link href="/productos" className="active">
-                Productos
-              </Nav.Link>
+              <NavDropdown
+                title="Productos"
+                id="productos-dropdown"
+                menuVariant="dark"
+                className="text-light"
+                style={{
+                  color: "#fff",
+                }}
+              >
+                <NavDropdown.Item href="#vinilos">Vinilos</NavDropdown.Item>
+                <NavDropdown.Item href="#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="#accesorios">
+                  Accesorios
+                </NavDropdown.Item>
+              </NavDropdown>
               <Nav.Link href="/nosotros" className="">
                 Nosotros
               </Nav.Link>
@@ -419,6 +434,9 @@ export default function ProductosPage() {
               </Nav.Link>
               <Nav.Link href="/contacto" className="">
                 Contacto
+              </Nav.Link>
+              <Nav.Link href="/oferta" className="">
+                Oferta
               </Nav.Link>
             </Nav>
 
@@ -444,9 +462,15 @@ export default function ProductosPage() {
         style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
       >
         <Container>
-          <CarouselCategoria categoria="Vinilos" />
-          <CarouselCategoria categoria="CDs" />
-          <CarouselCategoria categoria="Accesorios" />
+          <div id="vinilos">
+            <CarouselCategoria categoria="Vinilos" />
+          </div>
+          <div id="cds">
+            <CarouselCategoria categoria="CDs" />
+          </div>
+          <div id="accesorios">
+            <CarouselCategoria categoria="Accesorios" />
+          </div>
         </Container>
       </section>
 

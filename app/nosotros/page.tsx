@@ -1,6 +1,6 @@
 "use client";
 
-import { Navbar, Nav, Container, Row, Col } from "react-bootstrap";
+import { Navbar, Nav, Container, Row, Col, NavDropdown } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,9 +28,20 @@ export default function HomePage() {
               <Nav.Link href="/" className="">
                 Inicio
               </Nav.Link>
-              <Nav.Link href="/productos" className="">
-                Productos
-              </Nav.Link>
+              <NavDropdown
+                title="Productos"
+                id="productos-dropdown"
+                menuVariant="dark"
+                className="text-light"
+              >
+                <NavDropdown.Item href="/productos#vinilos">
+                  Vinilos
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
+                <NavDropdown.Item href="/productos#cds">
+                  Accesorios
+                </NavDropdown.Item>
+              </NavDropdown>
               <Nav.Link href="/nosotros" className="active">
                 Nosotros
               </Nav.Link>
