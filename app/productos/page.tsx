@@ -399,7 +399,9 @@ export default function ProductosPage() {
           </Link>
           <Navbar.Brand href="/ ">Inicio</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/productos">Productos</Nav.Link>
+            <Nav.Link href="/productos" className="active">
+              Productos{" "}
+            </Nav.Link>
             <Nav.Link href="/nosotros">Nosotros</Nav.Link>
             <Nav.Link href="/blog">Blog</Nav.Link>
             <Nav.Link href="/contacto">Contacto</Nav.Link>
