@@ -11,80 +11,11 @@ import {
 } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
+import NavbarTienda from "@/components/NavbarTienda";
 
 export default function HomePage() {
   return (
     <>
-      <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
-        <Container fluid>
-          <Link
-            href="/"
-            className="navbar-brand d-flex align-items-center me-3"
-          >
-            <Image
-              src="/images/Icono.png"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="me-2"
-            />
-          </Link>
-
-          <Navbar.Toggle aria-controls="navbarNav" />
-          <Navbar.Collapse id="navbarNav">
-            <Nav className="me-auto d-flex align-items-center">
-              <Nav.Link href="/" className="active">
-                Inicio
-              </Nav.Link>
-              <NavDropdown
-                title="Productos"
-                id="productos-dropdown"
-                menuVariant="dark"
-                className="text-light"
-                style={{
-                  color: "#fff",
-                }}
-              >
-                <NavDropdown.Item href="/productos#vinilos">
-                  Vinilos
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>
-                <NavDropdown.Item href="/productos#accesorios">
-                  Accesorios
-                </NavDropdown.Item>
-              </NavDropdown>
-              <Nav.Link href="/nosotros" className="">
-                Nosotros
-              </Nav.Link>
-              <Nav.Link href="/blog" className="">
-                Blog
-              </Nav.Link>
-              <Nav.Link href="/contacto" className="">
-                Contacto
-              </Nav.Link>
-              <Nav.Link href="/oferta" className="">
-                Ofertas
-              </Nav.Link>
-            </Nav>
-
-            <Nav className="ms-auto align-items-center gap-3">
-              <Link href="/sesion" className="nav-link">
-                Inicio de sesión
-              </Link>
-              <Link href="/carrito" className="nav-link p-0">
-                <Image
-                  src="/images/carrito.png"
-                  alt="Carrito"
-                  width={28}
-                  height={28}
-                  className="carrito"
-                />
-              </Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
       <section className="py-5 bg-auto">
         <Container>
           <Row className="align-items-center">
@@ -98,9 +29,10 @@ export default function HomePage() {
                 sonido se transforma en comunidad. Aquí la música se vive, se
                 toca y se comparte.” 🎶
               </p>
-              <Button variant="danger" href="/productos">
-                Ver Productos
-              </Button>
+
+              <Link href="/productos">
+                <Button variant="danger">Ver Productos</Button>
+              </Link>
             </Col>
 
             <Col md={6} className="text-center">
@@ -151,8 +83,8 @@ export default function HomePage() {
             <Col md={3}>
               <h3>Síguenos</h3>
               <div className="d-flex flex-column">
-                <a href="#">Facebook</a>
-                <a href="#">Instagram</a>
+                <Link href="#">Facebook</Link>
+                <Link href="#">Instagram</Link>
               </div>
             </Col>
           </Row>
