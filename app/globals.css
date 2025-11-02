@@ -171,11 +171,24 @@ section.about {
   background-color: black;
 }
 footer a {
-  color: #dc3545; /* rojo tipo Bootstrap 'danger' */
+  color: #dc3545; 
   text-decoration: none;
 }
 
 footer a:hover {
-  color: #ff6b6b; /* tono más claro al pasar el mouse */
+  color: #ff6b6b; 
   text-decoration: underline;
+}
+
+.form-control,
+.form-select {
+  background-color: #1c1a20 !important; /* gris oscuro similar al resto */
+  color: #fff !important;               /* texto blanco */
+  border: 1px solid #444 !important;    /* borde gris medio */
+  border-radius: 4px;
+}
+
+.form-control::placeholder,
+.form-select option {
+  color: #aaa !important;               /* placeholder gris claro */
 }

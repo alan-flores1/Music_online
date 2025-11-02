@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import { productos, productosdcto, agregarCarrito } from "@/app/datos/data";
+
 interface Producto {
   id: number;
   nombre: string;
@@ -23,63 +25,6 @@ interface Producto {
   descripcion: string;
 }
 
-const productos: Producto[] = [
-  {
-    id: 1,
-    nombre: "Vinilo Luis Miguel",
-    precio: 80000,
-    descuento: 20,
-    categoria: "Vinilos",
-    imagenes: [
-      "/images/vinilos/viniloluismi.jpeg",
-      "/images/vinilos/viniloluismi2.png",
-      "/images/vinilos/viniloluismi3.jpeg",
-    ],
-    descripcion:
-      "El clásico de Luis Miguel en vinilo, ideal para los nostálgicos del pop latino.",
-  },
-  {
-    id: 9,
-    nombre: "CD Bruno Mars / Doo-Wops",
-    precio: 50000,
-    descuento: 15,
-    categoria: "CDs",
-    imagenes: [
-      "/images/cd/bruno.png",
-      "/images/cd/bruno2.png",
-      "/images/cd/bruno3.png",
-    ],
-    descripcion:
-      "El debut de Bruno Mars con 'Doo-Wops & Hooligans', lleno de hits inolvidables.",
-  },
-  {
-    id: 17,
-    nombre: "Lector de Vinilos",
-    precio: 200000,
-    descuento: 10,
-    categoria: "Accesorios",
-    imagenes: [
-      "/images/accesorios/lectorvinilo.png",
-      "/images/accesorios/lectorvinilo2.png",
-      "/images/accesorios/lectorvinilo3.png",
-    ],
-    descripcion:
-      "Reproductor de vinilos de alta calidad, ideal para disfrutar tu colección.",
-  },
-];
-
-function agregarCarrito(id: number, cantidad = 1) {
-  let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
-  let producto = productos.find((p) => p.id === id);
-  if (!producto) return alert("Producto no encontrado");
-
-  let existente = carrito.find((p: any) => p.id === id);
-  if (existente) existente.cantidad += cantidad;
-  else carrito.push({ ...producto, cantidad });
-
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-  alert(`${producto.nombre} (x${cantidad}) añadido al carrito ✅`);
-}
 
 export default function OfertaPage() {
   return (
@@ -160,7 +105,7 @@ export default function OfertaPage() {
         <Container>
           <h2 className="mb-4 text-center">Ofertas Especiales</h2>
           <Row className="g-4 justify-content-center">
-            {productos.map((p) => {
+            {productosdcto.map((p) => {
               const precioConDescuento = p.descuento
                 ? Math.round(p.precio * (1 - p.descuento / 100))
                 : p.precio;
@@ -175,7 +120,7 @@ export default function OfertaPage() {
                           position: "absolute",
                           top: "10px",
                           left: "10px",
-                          backgroundColor: "red",
+                          backgroundColor: "#dc3545",
                           color: "white",
                           padding: "5px 10px",
                           borderRadius: "10px",
@@ -210,7 +155,7 @@ export default function OfertaPage() {
                             </span>
                             <span
                               style={{
-                                color: "#ff4d4d",
+                                color: "#dc3545",
                                 fontWeight: "bold",
                               }}
                             >
