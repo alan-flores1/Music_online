@@ -14,18 +14,9 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
-import { productos, productosdcto, agregarCarrito } from "@/app/datos/data";
+import { productos, agregarCarrito } from "@/app/datos/data";
 
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  categoria: string;
-  imagenes: string[];
-  descripcion: string;
-}
-
-
+import type { Producto } from "@/app/datos/data";
 
 function CarouselCategoria({ categoria }: { categoria: string }) {
   const idsEnOferta = [1, 9, 17];
@@ -34,7 +25,7 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
     (p) => p.categoria === categoria && !idsEnOferta.includes(p.id)
   );
 
-  const slides: any[] = [];
+  const slides: Producto[][] = [];
   for (let i = 0; i < lista.length; i += 4) {
     slides.push(lista.slice(i, i + 4));
   }

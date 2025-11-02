@@ -3,7 +3,6 @@
 import { Navbar, Nav, Container, Row, Col, NavDropdown } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-import { productosdcto, agregarCarrito } from "@/app/datos/data";
 
 export default function HomePage() {
   return (

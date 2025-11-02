@@ -13,18 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-import { productos, productosdcto, agregarCarrito } from "@/app/datos/data";
-
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  descuento?: number; // porcentaje de descuento
-  categoria: string;
-  imagenes: string[];
-  descripcion: string;
-}
-
+import {productosdcto, agregarCarrito } from "@/app/datos/data";
 
 export default function OfertaPage() {
   return (
@@ -59,7 +48,7 @@ export default function OfertaPage() {
                   color: "#fff",
                 }}
               >
-                 <NavDropdown.Item href="/productos#vinilos">
+                <NavDropdown.Item href="/productos#vinilos">
                   Vinilos
                 </NavDropdown.Item>
                 <NavDropdown.Item href="/productos#cds">CDs</NavDropdown.Item>

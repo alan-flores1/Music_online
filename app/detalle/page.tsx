@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Navbar,
@@ -16,19 +16,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-import { productos, productosdcto, agregarCarrito } from "@/app/datos/data";
+import { productos, agregarCarrito } from "@/app/datos/data";
+import type { Producto } from "@/app/datos/data";
 
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  categoria: string;
-  imagenes: string[];
-  descripcion: string;
-}
-
-
-export default function DetallePage() {
+function DetalleContent() {
   const searchParams = useSearchParams();
   const idParam = searchParams.get("id");
   const [producto, setProducto] = useState<Producto | null>(null);
@@ -48,8 +39,6 @@ export default function DetallePage() {
 
     setOtros(relacionados);
   }, [idParam]);
-
- 
 
   if (!producto)
     return <p className="text-center text-light mt-5">Cargando...</p>;
@@ -74,17 +63,12 @@ export default function DetallePage() {
           <Navbar.Toggle aria-controls="navbarNav" />
           <Navbar.Collapse id="navbarNav">
             <Nav className="me-auto d-flex align-items-center">
-              <Nav.Link href="/" className="">
-                Inicio
-              </Nav.Link>
+              <Nav.Link href="/">Inicio</Nav.Link>
               <NavDropdown
                 title="Productos"
                 id="productos-dropdown"
                 menuVariant="dark"
                 className="text-light"
-                style={{
-                  color: "#fff",
-                }}
               >
                 <NavDropdown.Item href="/productos#vinilos">
                   Vinilos
@@ -94,18 +78,12 @@ export default function DetallePage() {
                   Accesorios
                 </NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link href="/nosotros" className="">
-                Nosotros
-              </Nav.Link>
+              <Nav.Link href="/nosotros">Nosotros</Nav.Link>
               <Nav.Link href="/blog" className="active">
                 Blog
               </Nav.Link>
-              <Nav.Link href="/contacto" className="">
-                Contacto
-              </Nav.Link>
-              <Nav.Link href="/oferta" className="">
-                Ofertas
-              </Nav.Link>
+              <Nav.Link href="/contacto">Contacto</Nav.Link>
+              <Nav.Link href="/oferta">Ofertas</Nav.Link>
             </Nav>
 
             <Nav className="ms-auto align-items-center gap-3">
@@ -118,7 +96,6 @@ export default function DetallePage() {
                   alt="Carrito"
                   width={28}
                   height={28}
-                  className="carrito"
                 />
               </Link>
             </Nav>
@@ -193,5 +170,16 @@ export default function DetallePage() {
         </Container>
       </section>
     </>
+  );
+}
+
+// ✅ Esta función debe ir fuera de la anterior
+export default function DetallePage() {
+  return (
+    <Suspense
+      fallback={<p className="text-center text-light mt-5">Cargando...</p>}
+    >
+      <DetalleContent />
+    </Suspense>
   );
 }

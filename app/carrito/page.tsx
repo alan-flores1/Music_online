@@ -14,15 +14,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  categoria: string;
-  imagenes: string[];
-  descripcion: string;
-  cantidad?: number;
-}
+import { Producto } from "@/app/datos/data";
 
 export default function CarritoPage() {
   const [carrito, setCarrito] = useState<Producto[]>([]);
@@ -65,7 +57,7 @@ export default function CarritoPage() {
 
   return (
     <>
-     <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
+      <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
         <Container fluid>
           <Link
             href="/"
@@ -135,7 +127,7 @@ export default function CarritoPage() {
         </Container>
       </Navbar>
 
-      <div className="container" style={{ marginTop: "120px"}}>
+      <div className="container" style={{ marginTop: "120px" }}>
         <div className="row">
           {/* Lista de productos */}
           <div className="col-md-8">
@@ -197,117 +189,125 @@ export default function CarritoPage() {
                 </Card>
               ))
             )}
-            
+          </div>
+          <div className="col-md-4" style={{ marginTop: "50px" }}>
+            <div className="card p-3 shadow-sm bg-dark text-white">
+              <h4 className="fw-bold">TOTAL:</h4>
+              <h3 id="carrito-total" className="text-success fw-bold">
+                ${total.toLocaleString()}
+              </h3>
+              <Button
+                id="btnPagar"
+                className="btn btn-success w-100 mt-2"
+                onClick={pagar}
+                disabled={carrito.length === 0}
+              >
+                PAGAR
+              </Button>
             </div>
-            <div className="col-md-4" style={{ marginTop: "50px" }}>
-                <div className="card p-3 shadow-sm bg-dark text-white">
-                <h4 className="fw-bold">TOTAL:</h4>
-                <h3 id="carrito-total" className="text-success fw-bold">
-                    ${total.toLocaleString()}
-                </h3>
-                <Button
-                    id="btnPagar"
-                    className="btn btn-success w-100 mt-2"
-                    onClick={pagar}
-                    disabled={carrito.length === 0}
+          </div>
+        </div>
+      </div>
+      <div className="container my-5">
+        <div className="card bg-dark text-white p-4 shadow-sm">
+          <h3 className="mb-4">💳 Información de pago</h3>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const datos = {
+                nombre: (form.elements.namedItem("nombre") as HTMLInputElement)
+                  .value,
+                apellido: (
+                  form.elements.namedItem("apellido") as HTMLInputElement
+                ).value,
+                correo: (form.elements.namedItem("correo") as HTMLInputElement)
+                  .value,
+                direccion: (
+                  form.elements.namedItem("direccion") as HTMLInputElement
+                ).value,
+                region: (form.elements.namedItem("region") as HTMLSelectElement)
+                  .value,
+                comuna: (form.elements.namedItem("comuna") as HTMLInputElement)
+                  .value,
+              };
+              localStorage.setItem("datosCompra", JSON.stringify(datos));
+              localStorage.removeItem("carrito");
+              window.location.href = "/carrito/exito";
+            }}
+          >
+            <div className="row">
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  name="nombre"
+                  placeholder="Nombre"
+                  className="form-control mb-3 bg-dark text-white border-secondary"
+                  required
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  name="apellido"
+                  placeholder="Apellido"
+                  className="form-control mb-3 bg-dark text-white border-secondary"
+                  required
+                />
+              </div>
+            </div>
+
+            <input
+              type="email"
+              name="correo"
+              placeholder="Correo electrónico"
+              className="form-control mb-3 bg-dark text-white border-secondary"
+              required
+            />
+
+            <input
+              type="text"
+              name="direccion"
+              placeholder="Dirección"
+              className="form-control mb-3 bg-dark text-white border-secondary"
+              required
+            />
+
+            <div className="row">
+              <div className="col-md-6">
+                <select
+                  name="region"
+                  className="form-select mb-3 bg-dark text-white border-secondary"
+                  required
                 >
-                    PAGAR
-                </Button>
-                </div>
+                  <option value="">Selecciona región</option>
+                  <option>Región Metropolitana</option>
+                  <option>Valparaíso</option>
+                  <option>Biobío</option>
+                </select>
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  name="comuna"
+                  placeholder="Comuna"
+                  className="form-control mb-3 bg-dark text-white border-secondary"
+                  required
+                />
+              </div>
             </div>
-            </div>
-        </div>
-        <div className="container my-5">
-    <div className="card bg-dark text-white p-4 shadow-sm">
-        <h3 className="mb-4">💳 Información de pago</h3>
-        <form
-        onSubmit={(e) => {
-            e.preventDefault();
-            const datos = {
-            nombre: (e.target as any).nombre.value,
-            apellido: (e.target as any).apellido.value,
-            correo: (e.target as any).correo.value,
-            direccion: (e.target as any).direccion.value,
-            region: (e.target as any).region.value,
-            comuna: (e.target as any).comuna.value,
-            };
-            localStorage.setItem("datosCompra", JSON.stringify(datos));
-            localStorage.removeItem("carrito");
-            window.location.href = "/carrito/exito";
-        }}
-        >
-        <div className="row">
-            <div className="col-md-6">
-            <input
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                className="form-control mb-3 bg-dark text-white border-secondary"
-                required
-            />
-            </div>
-            <div className="col-md-6">
-            <input
-                type="text"
-                name="apellido"
-                placeholder="Apellido"
-                className="form-control mb-3 bg-dark text-white border-secondary"
-                required
-            />
-            </div>
-        </div>
 
-        <input
-            type="email"
-            name="correo"
-            placeholder="Correo electrónico"
-            className="form-control mb-3 bg-dark text-white border-secondary"
-            required
-        />
-
-        <input
-            type="text"
-            name="direccion"
-            placeholder="Dirección"
-            className="form-control mb-3 bg-dark text-white border-secondary"
-            required
-        />
-
-        <div className="row">
-            <div className="col-md-6">
-            <select
-                name="region"
-                className="form-select mb-3 bg-dark text-white border-secondary"
-                required
+            <Button
+              type="submit"
+              className="btn btn-success w-100"
+              disabled={carrito.length === 0}
             >
-                <option value="">Selecciona región</option>
-                <option>Región Metropolitana</option>
-                <option>Valparaíso</option>
-                <option>Biobío</option>
-            </select>
-            </div>
-            <div className="col-md-6">
-            <input
-                type="text"
-                name="comuna"
-                placeholder="Comuna"
-                className="form-control mb-3 bg-dark text-white border-secondary"
-                required
-            />
-            </div>
+              Finalizar compra (${total.toLocaleString()})
+            </Button>
+          </form>
         </div>
-
-        <Button
-            type="submit"
-            className="btn btn-success w-100"
-            disabled={carrito.length === 0}
-        >
-            Finalizar compra (${total.toLocaleString()})
-        </Button>
-        </form>
-    </div>
-    </div>     
-      <footer className="footer bg-dark text-white py-4 mt-5" >
+      </div>
+      <footer className="footer bg-dark text-white py-4 mt-5">
         <Container>
           <Row>
             <Col md={3}>
