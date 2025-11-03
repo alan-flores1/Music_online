@@ -53,7 +53,11 @@ export default function RegistroPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email.endsWith("@gmail.com") && !email.endsWith("@duocuc.cl")) {
+    if (
+      !email.endsWith("@gmail.com") &&
+      !email.endsWith("@duocuc.cl") &&
+      !email.endsWith("@duoc.cl")
+    ) {
       showToastMsg("El correo debe ser Gmail o DuocUC válido", "danger");
       return;
     }
@@ -98,7 +102,7 @@ export default function RegistroPage() {
     <>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-black text-white">
         <Card className="p-4 shadow" style={{ width: "500px" }}>
-          <h3 className="text-center mb-3 text-dark">Registro de usuario</h3>
+          <h3 className="text-center mb-3 text-white">Registro de usuario</h3>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="nombre">

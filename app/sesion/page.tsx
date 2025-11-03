@@ -63,7 +63,7 @@ export default function SesionPage() {
     <>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-black text-white">
         <Card className="p-4 shadow" style={{ width: "450px" }}>
-          <h3 className="text-center mb-4 text-dark">Inicio de Sesión</h3>
+          <h3 className="text-center mb-4 text-white">Inicio de Sesión</h3>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="email">
