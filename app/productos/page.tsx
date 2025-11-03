@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { productos, agregarCarrito } from "@/app/datos/data";
+import NavbarTienda from "@/components/NavbarTienda";
 
 import type { Producto } from "@/app/datos/data";
 
@@ -80,73 +81,6 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
 export default function ProductosPage() {
   return (
     <>
-      <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
-        <Container fluid>
-          <Link
-            href="/"
-            className="navbar-brand d-flex align-items-center me-3"
-          >
-            <Image
-              src="/images/Icono.png"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="me-2"
-            />
-          </Link>
-
-          <Navbar.Toggle aria-controls="navbarNav" />
-          <Navbar.Collapse id="navbarNav">
-            <Nav className="me-auto d-flex align-items-center">
-              <Nav.Link href="/" className="">
-                Inicio
-              </Nav.Link>
-              <NavDropdown
-                title="Productos"
-                id="productos-dropdown"
-                menuVariant="dark"
-                className="active text-light"
-                style={{
-                  color: "#fff",
-                }}
-              >
-                <NavDropdown.Item href="#vinilos">Vinilos</NavDropdown.Item>
-                <NavDropdown.Item href="#cds">CDs</NavDropdown.Item>
-                <NavDropdown.Item href="#accesorios">
-                  Accesorios
-                </NavDropdown.Item>
-              </NavDropdown>
-              <Nav.Link href="/nosotros" className="">
-                Nosotros
-              </Nav.Link>
-              <Nav.Link href="/blog" className="">
-                Blog
-              </Nav.Link>
-              <Nav.Link href="/contacto" className="">
-                Contacto
-              </Nav.Link>
-              <Nav.Link href="/oferta" className="">
-                Ofertas
-              </Nav.Link>
-            </Nav>
-
-            <Nav className="ms-auto align-items-center gap-3">
-              <Link href="/sesion" className="nav-link">
-                Inicio de sesión
-              </Link>
-              <Link href="/carrito" className="nav-link p-0">
-                <Image
-                  src="/images/carrito.png"
-                  alt="Carrito"
-                  width={28}
-                  height={28}
-                  className="carrito"
-                />
-              </Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
 
       <section
         style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
