@@ -2,20 +2,8 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Carousel,
-  NavDropdown,
-} from "react-bootstrap";
-import Image from "next/image";
+import { Container, Row, Col, Card, Button, Carousel } from "react-bootstrap";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 import { productos, agregarCarrito } from "@/app/datos/data";
 import type { Producto } from "@/app/datos/data";
@@ -46,8 +34,6 @@ function DetalleContent() {
 
   return (
     <>
-
-
       <section className="bg-black text-white py-5">
         <Container>
           <Row className="align-items-center">
@@ -118,7 +104,6 @@ function DetalleContent() {
   );
 }
 
-// ✅ Esta función debe ir fuera de la anterior
 export default function DetallePage() {
   return (
     <Suspense

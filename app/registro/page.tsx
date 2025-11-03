@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Form,
-  Button,
-  Card,
-  Row,
-  Col,
-  Toast,
-} from "react-bootstrap";
+import { Form, Button, Card, Row, Col, Toast } from "react-bootstrap";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
+
+interface Usuario {
+  nombre: string;
+  email: string;
+  password: string;
+  direccion: string;
+  region: string;
+  comuna: string;
+}
 
 export default function RegistroPage() {
   const [nombre, setNombre] = useState("");
@@ -26,8 +27,20 @@ export default function RegistroPage() {
   const [toastBg, setToastBg] = useState<"danger" | "success">("success");
 
   const comunasPorRegion: Record<string, string[]> = {
-    metropolitana: ["Santiago", "Maipú", "Puente Alto", "Las Condes", "La Florida"],
-    valparaiso: ["Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana", "San Antonio"],
+    metropolitana: [
+      "Santiago",
+      "Maipú",
+      "Puente Alto",
+      "Las Condes",
+      "La Florida",
+    ],
+    valparaiso: [
+      "Valparaíso",
+      "Viña del Mar",
+      "Quilpué",
+      "Villa Alemana",
+      "San Antonio",
+    ],
     biobio: ["Concepción", "Talcahuano", "Chillán", "Los Ángeles", "Coronel"],
   };
 
@@ -40,10 +53,7 @@ export default function RegistroPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      !email.endsWith("@gmail.com") &&
-      !email.endsWith("@duocuc.cl")
-    ) {
+    if (!email.endsWith("@gmail.com") && !email.endsWith("@duocuc.cl")) {
       showToastMsg("El correo debe ser Gmail o DuocUC válido", "danger");
       return;
     }
@@ -60,7 +70,7 @@ export default function RegistroPage() {
 
     const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
-    if (storedUsers.some((user: any) => user.email === email)) {
+    if (storedUsers.some((user: Usuario) => user.email === email)) {
       showToastMsg("Este correo ya está registrado", "danger");
       return;
     }
@@ -86,7 +96,6 @@ export default function RegistroPage() {
 
   return (
     <>
-
       <div className="d-flex justify-content-center align-items-center vh-100 bg-black text-white">
         <Card className="p-4 shadow" style={{ width: "500px" }}>
           <h3 className="text-center mb-3 text-dark">Registro de usuario</h3>

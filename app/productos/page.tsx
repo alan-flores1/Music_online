@@ -1,21 +1,16 @@
 "use client";
 
 import {
-  Navbar,
-  Nav,
   Container,
   Row,
   Col,
   Carousel,
   Card,
-  Button,
-  NavDropdown,
+  Button
 } from "react-bootstrap";
 
-import Image from "next/image";
 import Link from "next/link";
 import { productos, agregarCarrito } from "@/app/datos/data";
-import NavbarTienda from "@/components/NavbarTienda";
 
 import type { Producto } from "@/app/datos/data";
 
@@ -81,7 +76,6 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
 export default function ProductosPage() {
   return (
     <>
-
       <section
         style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
       >

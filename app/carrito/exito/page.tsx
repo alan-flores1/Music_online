@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-// Pequeñas animaciones con CSS inline y SVG animado
 export default function ExitoPage() {
   const [nombre, setNombre] = useState("Cliente");
   const [direccion, setDireccion] = useState("");
   const [total, setTotal] = useState<string>("0");
 
   useEffect(() => {
-    // Cargar datos de compra
     const datosRaw = localStorage.getItem("datosCompra");
     const totalRaw = localStorage.getItem("totalCompra");
     try {
@@ -86,8 +84,12 @@ export default function ExitoPage() {
 
         <div style={styles.summary}>
           <h3 style={{ marginBottom: 12 }}>🧾 Resumen</h3>
-          <p style={{ margin: 0 }}>Dirección: <strong>{direccion || "—"}</strong></p>
-          <p style={{ margin: 0 }}>Total pagado: <strong>${Number(total).toLocaleString()}</strong></p>
+          <p style={{ margin: 0 }}>
+            Dirección: <strong>{direccion || "—"}</strong>
+          </p>
+          <p style={{ margin: 0 }}>
+            Total pagado: <strong>${Number(total).toLocaleString()}</strong>
+          </p>
         </div>
 
         <Link href="/" style={styles.button}>

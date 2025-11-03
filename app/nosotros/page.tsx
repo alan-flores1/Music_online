@@ -1,15 +1,11 @@
 "use client";
 
-import { Navbar, Nav, Container, Row, Col, NavDropdown } from "react-bootstrap";
-import Image from "next/image";
+import { Container, Row, Col } from "react-bootstrap";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 export default function HomePage() {
   return (
     <>
-
-
       <section className="about py-5">
         <div className="container">
           <h1 className="text-center fw-bold mb-5">Sobre Nosotros</h1>

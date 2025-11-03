@@ -1,24 +1,12 @@
 "use client";
 
-import {
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-  Card,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
-
 
 export default function BlogPage() {
   return (
     <>
-
-
       <Container className="my-5">
         <h1 className="text-center fw-bold mb-5">Blogs Importantes</h1>
         <Row className="g-4">

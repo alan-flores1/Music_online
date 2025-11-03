@@ -1,26 +1,13 @@
 "use client";
 
-import {
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  NavDropdown,
-} from "react-bootstrap";
-import Image from "next/image";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 import { productosdcto, agregarCarrito } from "@/app/datos/data";
 
 export default function OfertaPage() {
   return (
     <>
-
-
       <section
         style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
       >

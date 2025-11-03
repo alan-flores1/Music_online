@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 import { Producto } from "@/app/datos/data";
 
@@ -89,7 +88,6 @@ export default function CarritoPage() {
 
   return (
     <>
-
       <div className="d-flex flex-column min-vh-100">
         <div className="flex-grow-1">
           <div className="container" style={{ marginTop: "120px" }}>
@@ -100,7 +98,10 @@ export default function CarritoPage() {
                   <p>No hay productos en el carrito.</p>
                 ) : (
                   carrito.map((p) => (
-                    <Card key={p.id} className="mb-3 bg-dark text-white border-secondary">
+                    <Card
+                      key={p.id}
+                      className="mb-3 bg-dark text-white border-secondary"
+                    >
                       <Card.Body className="d-flex align-items-center">
                         <Image
                           src={p.imagenes[0]}
@@ -116,7 +117,9 @@ export default function CarritoPage() {
                             <Button
                               variant="secondary"
                               size="sm"
-                              onClick={() => actualizarCantidad(p.id, (p.cantidad || 1) - 1)}
+                              onClick={() =>
+                                actualizarCantidad(p.id, (p.cantidad || 1) - 1)
+                              }
                             >
                               -
                             </Button>
@@ -124,7 +127,9 @@ export default function CarritoPage() {
                             <Button
                               variant="secondary"
                               size="sm"
-                              onClick={() => actualizarCantidad(p.id, (p.cantidad || 1) + 1)}
+                              onClick={() =>
+                                actualizarCantidad(p.id, (p.cantidad || 1) + 1)
+                              }
                             >
                               +
                             </Button>
@@ -205,7 +210,9 @@ export default function CarritoPage() {
                         required
                       >
                         <option value="">Selecciona región</option>
-                        <option value="Región Metropolitana">Región Metropolitana</option>
+                        <option value="Región Metropolitana">
+                          Región Metropolitana
+                        </option>
                         <option value="Valparaíso">Valparaíso</option>
                         <option value="Biobío">Biobío</option>
                       </select>
@@ -246,9 +253,15 @@ export default function CarritoPage() {
               <Col md={3}>
                 <h3>Enlaces</h3>
                 <ul className="list-unstyled">
-                  <li><Link href="/">Inicio</Link></li>
-                  <li><Link href="/productos">Productos</Link></li>
-                  <li><Link href="/contacto">Sobre Nosotros</Link></li>
+                  <li>
+                    <Link href="/">Inicio</Link>
+                  </li>
+                  <li>
+                    <Link href="/productos">Productos</Link>
+                  </li>
+                  <li>
+                    <Link href="/contacto">Sobre Nosotros</Link>
+                  </li>
                 </ul>
               </Col>
 
@@ -268,7 +281,9 @@ export default function CarritoPage() {
             </Row>
 
             <div className="text-center mt-4 border-top pt-3">
-              <p className="mb-0">&copy; 2025 Tienda. Todos los derechos reservados.</p>
+              <p className="mb-0">
+                &copy; 2025 Tienda. Todos los derechos reservados.
+              </p>
             </div>
           </Container>
         </footer>

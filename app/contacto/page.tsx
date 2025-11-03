@@ -1,20 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-  Modal,
-  Button,
-  Form,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Row, Col, Modal, Button, Form } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 export default function ContactoPage() {
   const [showModal, setShowModal] = useState(false);
@@ -30,7 +19,6 @@ export default function ContactoPage() {
 
   return (
     <>
-
       {/* CONTENIDO */}
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="bg-dark p-4 shadow rounded contact-card text-white">

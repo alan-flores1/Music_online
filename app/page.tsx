@@ -1,17 +1,13 @@
 "use client";
 
 import {
-  Navbar,
-  Nav,
   Container,
   Row,
   Col,
-  Button,
-  NavDropdown,
+  Button
 } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-import NavbarTienda from "@/components/NavbarTienda";
 
 export default function HomePage() {
   return (
