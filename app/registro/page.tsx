@@ -108,6 +108,8 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="nombre">
               <Form.Label>Nombre completo</Form.Label>
               <Form.Control
+                id="nombre"
+                name="nombre"
                 type="text"
                 placeholder="Juan Pérez"
                 value={nombre}
@@ -119,6 +121,8 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
+                id="email"
+                name="email"
                 type="email"
                 placeholder="nombre@ejemplo.com"
                 maxLength={100}
@@ -131,6 +135,8 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="password">
               <Form.Label>Contraseña</Form.Label>
               <Form.Control
+                id="password"
+                name="password"
                 type="password"
                 placeholder="••••••••"
                 minLength={4}
@@ -139,45 +145,51 @@ export default function RegistroPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="confirmar">
               <Form.Label>Confirmar contraseña</Form.Label>
               <Form.Control
+                id="confirmar"
+                name="confirmar"
                 type="password"
                 placeholder="Repite tu contraseña"
-                minLength={4}
-                maxLength={10}
                 value={confirmar}
                 onChange={(e) => setConfirmar(e.target.value)}
                 required
               />
+
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="direccion">
               <Form.Label>Dirección</Form.Label>
               <Form.Control
+                id="direccion"
+                name="direccion"
                 type="text"
                 placeholder="Ej: Calle 1234"
-                minLength={4}
-                maxLength={50}
                 value={direccion}
                 onChange={(e) => setDireccion(e.target.value)}
                 required
               />
+
             </Form.Group>
 
             <Row className="mb-3">
               <Col>
                 <Form.Label>Región</Form.Label>
                 <Form.Select
+                  id="region"
+                  name="region"
                   value={region}
                   onChange={(e) => {
-                    setRegion(e.target.value);
-                    setComuna("");
+                    setRegion(e.target.value)
+                    setComuna("")
                   }}
                   required
                 >
+
                   <option value="">Seleccione región</option>
                   <option value="metropolitana">Metropolitana</option>
                   <option value="valparaiso">Valparaíso</option>
@@ -188,11 +200,14 @@ export default function RegistroPage() {
               <Col>
                 <Form.Label>Comuna</Form.Label>
                 <Form.Select
+                  id="comuna"
+                  name="comuna"
                   value={comuna}
                   onChange={(e) => setComuna(e.target.value)}
                   required
                   disabled={!region}
                 >
+
                   <option value="">Seleccione comuna</option>
                   {region &&
                     comunasPorRegion[region]?.map((c) => (
