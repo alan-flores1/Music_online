@@ -52,7 +52,7 @@ export default function SesionPage() {
     localStorage.setItem("logged", "true");
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
 
-    showToastMsg("Bienvenido ✅", "success");
+    showToastMsg("Bienvenido", "success");
 
     setTimeout(() => {
       window.location.href = "/";
