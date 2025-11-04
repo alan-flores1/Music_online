@@ -117,7 +117,7 @@ export default function SesionPage() {
           onClose={() => setShowToast(false)}
           show={showToast}
           delay={2000}
-          autohide
+          autohide={false}
         >
           <Toast.Header>
             <strong className="me-auto">

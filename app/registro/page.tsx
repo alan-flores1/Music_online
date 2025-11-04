@@ -145,7 +145,6 @@ export default function RegistroPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="confirmar">
@@ -159,7 +158,6 @@ export default function RegistroPage() {
                 onChange={(e) => setConfirmar(e.target.value)}
                 required
               />
-
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="direccion">
@@ -173,7 +171,6 @@ export default function RegistroPage() {
                 onChange={(e) => setDireccion(e.target.value)}
                 required
               />
-
             </Form.Group>
 
             <Row className="mb-3">
@@ -184,12 +181,11 @@ export default function RegistroPage() {
                   name="region"
                   value={region}
                   onChange={(e) => {
-                    setRegion(e.target.value)
-                    setComuna("")
+                    setRegion(e.target.value);
+                    setComuna("");
                   }}
                   required
                 >
-
                   <option value="">Seleccione región</option>
                   <option value="metropolitana">Metropolitana</option>
                   <option value="valparaiso">Valparaíso</option>
@@ -207,7 +203,6 @@ export default function RegistroPage() {
                   required
                   disabled={!region}
                 >
-
                   <option value="">Seleccione comuna</option>
                   {region &&
                     comunasPorRegion[region]?.map((c) => (
@@ -244,7 +239,7 @@ export default function RegistroPage() {
           onClose={() => setShowToast(false)}
           show={showToast}
           delay={2000}
-          autohide
+          autohide={false}
         >
           <Toast.Header>
             <strong className="me-auto">
