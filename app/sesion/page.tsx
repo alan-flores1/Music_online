@@ -30,7 +30,11 @@ export default function SesionPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email.endsWith("@gmail.com") && !email.endsWith("@duocuc.cl")) {
+    if (
+      !email.endsWith("@gmail.com") &&
+      !email.endsWith("@duocuc.cl") &&
+      !email.endsWith("@duoc.cl")
+    ) {
       showToastMsg("El correo debe ser Gmail o DuocUC válido", "danger");
       return;
     }
