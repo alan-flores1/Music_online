@@ -69,6 +69,8 @@ export default function SesionPage() {
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
+                id="email"
+                name="email"
                 type="email"
                 placeholder="nombre@ejemplo.com"
                 value={email}
@@ -80,6 +82,8 @@ export default function SesionPage() {
             <Form.Group className="mb-3" controlId="password">
               <Form.Label>Contraseña</Form.Label>
               <Form.Control
+                id="password"
+                name="password"
                 type="password"
                 placeholder="••••••••"
                 value={password}
