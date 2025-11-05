@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
-
 import { Producto } from "@/app/datos/data";
 
 export default function CarritoPage() {
@@ -16,6 +15,10 @@ export default function CarritoPage() {
   const [formDireccion, setFormDireccion] = useState("");
   const [formRegion, setFormRegion] = useState("");
   const [formComuna, setFormComuna] = useState("");
+
+  const [showProcesando, setShowProcesando] = useState(false);
+  const [showExito, setShowExito] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("carrito") || "[]");
@@ -35,20 +38,16 @@ export default function CarritoPage() {
     if (!userRaw) return;
     try {
       const user = JSON.parse(userRaw);
-
       const regionMap: Record<string, string> = {
         metropolitana: "Región Metropolitana",
         valparaiso: "Valparaíso",
         biobio: "Biobío",
       };
-
       setFormNombre(user?.nombre || "");
       setFormCorreo(user?.email || "");
       setFormDireccion(user?.direccion || "");
-
       const regionGuardada = user?.region || "";
       setFormRegion(regionMap[regionGuardada] ?? regionGuardada);
-
       setFormComuna(user?.comuna || "");
     } catch {}
   }, []);
@@ -68,22 +67,39 @@ export default function CarritoPage() {
     localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
   };
 
+  const siguienteEsError = () => {
+    const raw = localStorage.getItem("pagoAttempt") || "0";
+    const n = Number.parseInt(raw, 10) || 0;
+    const esError = n % 3 === 0;
+    localStorage.setItem("pagoAttempt", String(n + 1));
+    return esError;
+  };
+
   const handleSubmitCompra = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const datos = {
-      nombreCompleto: formNombre.trim(),
-      correo: formCorreo.trim(),
-      direccion: formDireccion.trim(),
-      region: formRegion,
-      comuna: formComuna.trim(),
-    };
-
-    localStorage.setItem("datosCompra", JSON.stringify(datos));
-    localStorage.setItem("totalCompra", String(total));
-
-    localStorage.removeItem("carrito");
-    window.location.href = "/carrito/exito";
+    setShowProcesando(true);
+    setTimeout(() => {
+      setShowProcesando(false);
+      const fallo = siguienteEsError();
+      if (fallo) {
+        setShowError(true);
+        return;
+      }
+      const datos = {
+        nombreCompleto: formNombre.trim(),
+        correo: formCorreo.trim(),
+        direccion: formDireccion.trim(),
+        region: formRegion,
+        comuna: formComuna.trim(),
+      };
+      localStorage.setItem("datosCompra", JSON.stringify(datos));
+      localStorage.setItem("totalCompra", String(total));
+      localStorage.removeItem("carrito");
+      setShowExito(true);
+      setTimeout(() => {
+        window.location.href = "/carrito/exito";
+      }, 1500);
+    }, 2000);
   };
 
   return (
@@ -239,7 +255,7 @@ export default function CarritoPage() {
           )}
         </div>
 
-        <footer className="footer bg-dark text-white py-4 mt-5">
+        <footer className="footer bg-dark text-white py-4 mt-auto">
           <Container>
             <Row>
               <Col md={3}>
@@ -253,15 +269,9 @@ export default function CarritoPage() {
               <Col md={3}>
                 <h3>Enlaces</h3>
                 <ul className="list-unstyled">
-                  <li>
-                    <Link href="/">Inicio</Link>
-                  </li>
-                  <li>
-                    <Link href="/productos">Productos</Link>
-                  </li>
-                  <li>
-                    <Link href="/contacto">Sobre Nosotros</Link>
-                  </li>
+                  <li><Link href="/">Inicio</Link></li>
+                  <li><Link href="/productos">Productos</Link></li>
+                  <li><Link href="/contacto">Sobre Nosotros</Link></li>
                 </ul>
               </Col>
 
@@ -281,13 +291,43 @@ export default function CarritoPage() {
             </Row>
 
             <div className="text-center mt-4 border-top pt-3">
-              <p className="mb-0">
-                &copy; 2025 Tienda. Todos los derechos reservados.
-              </p>
+              <p className="mb-0">&copy; 2025 Tienda. Todos los derechos reservados.</p>
             </div>
           </Container>
         </footer>
       </div>
+
+      {showProcesando && (
+        <div className="modal-backdrop-custom">
+          <div className="modal-content-custom">
+            <div className="loader"></div>
+            <p className="mt-3">Procesando pago...</p>
+          </div>
+        </div>
+      )}
+
+      {showExito && (
+        <div className="modal-backdrop-custom">
+          <div className="modal-content-custom success">
+            ✅ Compra realizada con éxito!
+          </div>
+        </div>
+      )}
+
+      {showError && (
+        <div className="modal-backdrop-custom">
+          <div className="modal-content-custom error">
+            ❌ Error al procesar el pago.<br />
+            Intenta nuevamente.
+            <button
+              className="btn btn-light mt-3"
+              onClick={() => setShowError(false)}
+            >
+              🔄 Volver a intentar
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
