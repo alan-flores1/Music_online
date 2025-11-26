@@ -1,13 +1,6 @@
 "use client";
-
-import {
-  Container,
-  Row,
-  Col,
-  Carousel,
-  Card,
-  Button
-} from "react-bootstrap";
+import ServerDataFetcher from "../../components/api.jsx";
+import { Container, Row, Col, Carousel, Card, Button } from "react-bootstrap";
 
 import Link from "next/link";
 import { productos, agregarCarrito } from "@/app/datos/data";
@@ -28,6 +21,7 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
 
   return (
     <div className="mb-5">
+      <ServerDataFetcher></ServerDataFetcher>
       <h3 className="text-light mb-3">{categoria}</h3>
       <Carousel interval={4000} indicators={false} pause={false}>
         {slides.map((slide, index) => (
