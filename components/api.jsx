@@ -37,7 +37,7 @@ export async function crearUsuario(usuario) {
 
 // Iniciar sesión (si tu API lo maneja)
 export async function login(email, contrasenia) {
-  const url = `https://musicapi01-production.up.railway.app/api/users/login`;
+  const url = `https://musicapi01-production.up.railway.app/api/users`;
 
   const res = await fetch(url, {
     method: "POST",
