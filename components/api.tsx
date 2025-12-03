@@ -16,20 +16,30 @@ export async function getUsers() {
   return await res.json();
 }
 
-export async function crearUsuario(usuario) {
-  const url = "https://musicapi01-production.up.railway.app/api/users";
+export async function crearUsuario(user: any) {
+  try {
+    const res = await fetch(
+      "https://musicapi01-production.up.railway.app/api/users",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }
+    );
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(usuario),
-  });
+    if (!res.ok) {
+      return { error: "No se pudo registrar el usuario" };
+    }
 
-  return await res.json();
+    const data = await res.json();
+    return { data };
+  } catch (err) {
+    return { error: "Error al comunicar con la API" };
+  }
 }
 
-export async function login(email, contrasenia) {
-  const url = `https://musicapi01-production.up.railway.app/api/users`;
+export async function login(email: string, contrasenia: string) {
+  const url = "https://musicapi01-production.up.railway.app/api/users";
 
   const res = await fetch(url, {
     method: "POST",

@@ -3,22 +3,13 @@
 import { useState } from "react";
 import { Form, Button, Card, Row, Col, Toast } from "react-bootstrap";
 import Link from "next/link";
-
-interface Usuario {
-  nombre: string;
-  email: string;
-  password: string;
-  direccion: string;
-  region: string;
-  comuna: string;
-}
+import { crearUsuario } from "../../components/api";
 
 export default function RegistroPage() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [direccion, setDireccion] = useState("");
   const [region, setRegion] = useState("");
   const [comuna, setComuna] = useState("");
 
@@ -50,7 +41,7 @@ export default function RegistroPage() {
     setShowToast(true);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -72,24 +63,21 @@ export default function RegistroPage() {
       return;
     }
 
-    const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-
-    if (storedUsers.some((user: Usuario) => user.email === email)) {
-      showToastMsg("Este correo ya está registrado", "danger");
-      return;
-    }
-
     const newUser = {
-      nombre,
-      email,
-      password,
-      direccion,
-      region,
-      comuna,
+      nombre_user: nombre,
+      correo: email,
+      contrasenia: password,
+      region: region,
+      comuna: comuna,
+      rol: "CLIENTE",
     };
 
-    const updatedUsers = [...storedUsers, newUser];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    const response = await crearUsuario(newUser);
+
+    if (response.error) {
+      showToastMsg(response.error, "danger");
+      return;
+    }
 
     showToastMsg("Registro exitoso ✅", "success");
 
@@ -108,8 +96,6 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="nombre">
               <Form.Label>Nombre completo</Form.Label>
               <Form.Control
-                id="nombre"
-                name="nombre"
                 type="text"
                 placeholder="Juan Pérez"
                 value={nombre}
@@ -121,11 +107,8 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
-                id="email"
-                name="email"
                 type="email"
                 placeholder="nombre@ejemplo.com"
-                maxLength={100}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -135,13 +118,10 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="password">
               <Form.Label>Contraseña</Form.Label>
               <Form.Control
-                id="password"
-                name="password"
                 type="password"
-                placeholder="••••••••"
-                minLength={4}
-                maxLength={10}
+                placeholder="••••••"
                 value={password}
+                minLength={4}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
@@ -150,8 +130,6 @@ export default function RegistroPage() {
             <Form.Group className="mb-3" controlId="confirmar">
               <Form.Label>Confirmar contraseña</Form.Label>
               <Form.Control
-                id="confirmar"
-                name="confirmar"
                 type="password"
                 placeholder="Repite tu contraseña"
                 value={confirmar}
@@ -160,25 +138,11 @@ export default function RegistroPage() {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="direccion">
-              <Form.Label>Dirección</Form.Label>
-              <Form.Control
-                id="direccion"
-                name="direccion"
-                type="text"
-                placeholder="Ej: Calle 1234"
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-                required
-              />
-            </Form.Group>
-
+            {/* Región y comuna */}
             <Row className="mb-3">
               <Col>
                 <Form.Label>Región</Form.Label>
                 <Form.Select
-                  id="region"
-                  name="region"
                   value={region}
                   onChange={(e) => {
                     setRegion(e.target.value);
@@ -196,8 +160,6 @@ export default function RegistroPage() {
               <Col>
                 <Form.Label>Comuna</Form.Label>
                 <Form.Select
-                  id="comuna"
-                  name="comuna"
                   value={comuna}
                   onChange={(e) => setComuna(e.target.value)}
                   required
@@ -206,7 +168,7 @@ export default function RegistroPage() {
                   <option value="">Seleccione comuna</option>
                   {region &&
                     comunasPorRegion[region]?.map((c) => (
-                      <option key={c} value={c.toLowerCase()}>
+                      <option key={c} value={c}>
                         {c}
                       </option>
                     ))}
@@ -223,7 +185,7 @@ export default function RegistroPage() {
                 ¿Ya tienes cuenta?{" "}
                 <Link
                   href="/sesion"
-                  className="text-decoration-none text-danger"
+                  className="text-danger text-decoration-none"
                 >
                   Inicia sesión
                 </Link>
@@ -233,13 +195,12 @@ export default function RegistroPage() {
         </Card>
       </div>
 
+      {/* Toast */}
       <div style={{ position: "fixed", top: 10, right: 10, zIndex: 9999 }}>
         <Toast
           bg={toastBg}
           onClose={() => setShowToast(false)}
           show={showToast}
-          delay={2000}
-          autohide={false}
         >
           <Toast.Header>
             <strong className="me-auto">
