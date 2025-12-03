@@ -1,44 +1,53 @@
 "use client";
-import ServerDataFetcher from "../../components/api.jsx";
+
 import { Container, Row, Col, Carousel, Card, Button } from "react-bootstrap";
-
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { productos, agregarCarrito } from "@/app/datos/data";
-
-import type { Producto } from "@/app/datos/data";
+import { agregarCarrito } from "@/app/datos/data";
 
 function CarouselCategoria({ categoria }: { categoria: string }) {
-  const idsEnOferta = [1, 9, 17];
+  const [productos, setProductos] = useState([]);
 
+  useEffect(() => {
+    fetch("https://musicapi01-production.up.railway.app/api/productos")
+      .then((res) => res.json())
+      .then((data) => setProductos(data))
+      .catch((error) => console.log("Error", error));
+  }, []);
+
+  // Arreglamos categoría: API usa mayúsculas
   const lista = productos.filter(
-    (p) => p.categoria === categoria && !idsEnOferta.includes(p.id)
+    (p: any) => p.categoria === categoria.toUpperCase()
   );
 
-  const slides: Producto[][] = [];
+  // Generamos slides de 4
+  const slides: any[][] = [];
   for (let i = 0; i < lista.length; i += 4) {
     slides.push(lista.slice(i, i + 4));
   }
 
   return (
     <div className="mb-5">
-      <ServerDataFetcher></ServerDataFetcher>
       <h3 className="text-light mb-3">{categoria}</h3>
+
       <Carousel interval={4000} indicators={false} pause={false}>
         {slides.map((slide, index) => (
           <Carousel.Item key={index}>
             <Row className="justify-content-center">
-              {slide.map((p: Producto) => (
+              {slide.map((p: any) => (
                 <Col key={p.id} xs={6} sm={4} md={3} lg={2}>
                   <Card className="compact-card h-100 bg-dark text-light">
                     <Card.Img
                       variant="top"
-                      src={p.imagenes[0]}
+                      src={p.imagenUrl} // ← API
                       alt={p.nombre}
                       style={{ height: 200, objectFit: "cover" }}
                     />
+
                     <Card.Body className="text-center p-2">
                       <Card.Title as="h6">{p.nombre}</Card.Title>
                       <Card.Text>${p.precio}</Card.Text>
+
                       <div className="d-flex justify-content-center gap-2">
                         <Button
                           variant="secondary"
@@ -47,10 +56,11 @@ function CarouselCategoria({ categoria }: { categoria: string }) {
                         >
                           Ver detalle
                         </Button>
+
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => agregarCarrito(p.id)}
+                          onClick={() => agregarCarrito(p)}
                         >
                           Comprar
                         </Button>
@@ -75,11 +85,13 @@ export default function ProductosPage() {
       >
         <Container>
           <div id="vinilos">
-            <CarouselCategoria categoria="Vinilos" />
+            <CarouselCategoria categoria="Vinilo" />
           </div>
+
           <div id="cds">
-            <CarouselCategoria categoria="CDs" />
+            <CarouselCategoria categoria="Cds" />
           </div>
+
           <div id="accesorios">
             <CarouselCategoria categoria="Accesorios" />
           </div>

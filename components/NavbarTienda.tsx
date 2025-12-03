@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Navbar,
-  Nav,
-  Container,
-  NavDropdown,
-} from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function NavbarTienda() {
   const [logged, setLogged] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const isLogged = localStorage.getItem("logged") === "true";
     setLogged(isLogged);
+    setMounted(true);
   }, []);
+
+  if (!mounted) return null; // ← evita mismatches
 
   const handleLogout = () => {
     localStorage.removeItem("logged");
@@ -28,10 +29,7 @@ export default function NavbarTienda() {
   return (
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="py-3">
       <Container fluid>
-        <Link
-          href="/"
-          className="navbar-brand d-flex align-items-center me-3"
-        >
+        <Link href="/" className="navbar-brand d-flex align-items-center me-3">
           <Image
             src="/images/Icono.png"
             alt="Logo"
@@ -44,7 +42,11 @@ export default function NavbarTienda() {
         <Navbar.Toggle aria-controls="navbarNav" />
         <Navbar.Collapse id="navbarNav">
           <Nav className="me-auto d-flex align-items-center">
-            <Nav.Link as={Link} href="/" className="active">
+            <Nav.Link
+              as={Link}
+              href="/"
+              className={pathname === "/" ? "active" : ""}
+            >
               Inicio
             </Nav.Link>
 
@@ -52,7 +54,7 @@ export default function NavbarTienda() {
               title="Productos"
               id="productos-dropdown"
               menuVariant="dark"
-              className="text-light"
+              className={pathname.includes("/productos") ? "active" : ""}
             >
               <NavDropdown.Item as={Link} href="/productos#vinilos">
                 Vinilos
@@ -65,16 +67,35 @@ export default function NavbarTienda() {
               </NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link as={Link} href="/nosotros">
+            <Nav.Link
+              as={Link}
+              href="/nosotros"
+              className={pathname === "/nosotros" ? "active" : ""}
+            >
               Nosotros
             </Nav.Link>
-            <Nav.Link as={Link} href="/blog">
+
+            <Nav.Link
+              as={Link}
+              href="/blog"
+              className={pathname === "/blog" ? "active" : ""}
+            >
               Blog
             </Nav.Link>
-            <Nav.Link as={Link} href="/contacto">
+
+            <Nav.Link
+              as={Link}
+              href="/contacto"
+              className={pathname === "/contacto" ? "active" : ""}
+            >
               Contacto
             </Nav.Link>
-            <Nav.Link as={Link} href="/oferta">
+
+            <Nav.Link
+              as={Link}
+              href="/oferta"
+              className={pathname === "/oferta" ? "active" : ""}
+            >
               Ofertas
             </Nav.Link>
           </Nav>
@@ -85,10 +106,7 @@ export default function NavbarTienda() {
                 Iniciar Sesión
               </Nav.Link>
             ) : (
-              <Nav.Link
-                onClick={handleLogout}
-                style={{ cursor: "pointer" }}
-              >
+              <Nav.Link onClick={handleLogout} style={{ cursor: "pointer" }}>
                 Cerrar Sesión
               </Nav.Link>
             )}

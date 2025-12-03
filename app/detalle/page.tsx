@@ -2,10 +2,10 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Container, Row, Col, Card, Button, Carousel } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Link from "next/link";
 
-import { productos, agregarCarrito } from "@/app/datos/data";
+import { agregarCarrito } from "@/app/datos/data";
 import type { Producto } from "@/app/datos/data";
 
 function DetalleContent() {
@@ -18,15 +18,33 @@ function DetalleContent() {
     if (!idParam) return;
 
     const id = parseInt(idParam);
-    const encontrado = productos.find((p) => p.id === id);
-    setProducto(encontrado || null);
 
-    const relacionados = productos
-      .filter((p) => p.id !== id)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 4);
+    async function fetchData() {
+      try {
+        const res = await fetch(
+          "https://musicapi01-production.up.railway.app/api/productos/" + id
+        );
+        const data: Producto = await res.json();
+        setProducto(data);
 
-    setOtros(relacionados);
+        const res2 = await fetch(
+          "https://musicapi01-production.up.railway.app/api/productos"
+        );
+        const lista: Producto[] = await res2.json();
+
+        const relacionados = lista
+          .filter((p) => p.id !== id)
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+
+        setOtros(relacionados);
+      } catch (e) {
+        console.error("Error cargando producto:", e);
+        setProducto(null);
+      }
+    }
+
+    fetchData();
   }, [idParam]);
 
   if (!producto)
@@ -38,22 +56,16 @@ function DetalleContent() {
         <Container>
           <Row className="align-items-center">
             <Col md={6}>
-              <Carousel>
-                {producto.imagenes.map((img, i) => (
-                  <Carousel.Item key={i}>
-                    <img
-                      src={img}
-                      alt={producto.nombre}
-                      className="d-block w-100"
-                      style={{
-                        height: 400,
-                        objectFit: "contain",
-                        borderRadius: "10px",
-                      }}
-                    />
-                  </Carousel.Item>
-                ))}
-              </Carousel>
+              <img
+                src={producto.imagenUrl}
+                alt={producto.nombre}
+                className="d-block w-100"
+                style={{
+                  height: 400,
+                  objectFit: "contain",
+                  borderRadius: "10px",
+                }}
+              />
             </Col>
 
             <Col md={6} className="text-light">
@@ -64,7 +76,7 @@ function DetalleContent() {
                 variant="danger"
                 size="lg"
                 className="mt-3"
-                onClick={() => agregarCarrito(producto.id)}
+                onClick={() => agregarCarrito(producto)}
               >
                 Añadir al carrito 🛒
               </Button>
@@ -82,7 +94,7 @@ function DetalleContent() {
                 <Card className="h-100 bg-light text-dark">
                   <Card.Img
                     variant="top"
-                    src={p.imagenes[0]}
+                    src={p.imagenUrl}
                     style={{ height: 200, objectFit: "cover" }}
                   />
                   <Card.Body className="text-center">

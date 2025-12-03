@@ -92,6 +92,7 @@ export default function CarritoPage() {
         region: formRegion,
         comuna: formComuna.trim(),
       };
+
       localStorage.setItem("datosCompra", JSON.stringify(datos));
       localStorage.setItem("totalCompra", String(total));
       localStorage.removeItem("carrito");
@@ -120,7 +121,9 @@ export default function CarritoPage() {
                     >
                       <Card.Body className="d-flex align-items-center">
                         <Image
-                          src={p.imagenes[0]}
+                          src={
+                            p.imagenes?.[0] || p.imagenUrl || "/placeholder.png"
+                          }
                           alt={p.nombre}
                           width={80}
                           height={80}
@@ -269,9 +272,15 @@ export default function CarritoPage() {
               <Col md={3}>
                 <h3>Enlaces</h3>
                 <ul className="list-unstyled">
-                  <li><Link href="/">Inicio</Link></li>
-                  <li><Link href="/productos">Productos</Link></li>
-                  <li><Link href="/contacto">Sobre Nosotros</Link></li>
+                  <li>
+                    <Link href="/">Inicio</Link>
+                  </li>
+                  <li>
+                    <Link href="/productos">Productos</Link>
+                  </li>
+                  <li>
+                    <Link href="/contacto">Sobre Nosotros</Link>
+                  </li>
                 </ul>
               </Col>
 
@@ -291,7 +300,9 @@ export default function CarritoPage() {
             </Row>
 
             <div className="text-center mt-4 border-top pt-3">
-              <p className="mb-0">&copy; 2025 Tienda. Todos los derechos reservados.</p>
+              <p className="mb-0">
+                &copy; 2025 Tienda. Todos los derechos reservados.
+              </p>
             </div>
           </Container>
         </footer>
@@ -317,7 +328,8 @@ export default function CarritoPage() {
       {showError && (
         <div className="modal-backdrop-custom">
           <div className="modal-content-custom error">
-            ❌ Error al procesar el pago.<br />
+            ❌ Error al procesar el pago.
+            <br />
             Intenta nuevamente.
             <button
               className="btn btn-light mt-3"
