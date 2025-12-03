@@ -1,6 +1,3 @@
-// =====================
-// PRODUCTOS
-// =====================
 export async function getProductos() {
   const url = "https://musicapi01-production.up.railway.app/api/productos";
 
@@ -10,9 +7,6 @@ export async function getProductos() {
   return await res.json();
 }
 
-// =====================
-// USUARIOS
-// =====================
 export async function getUsers() {
   const url = "https://musicapi01-production.up.railway.app/api/users";
 
@@ -22,7 +16,6 @@ export async function getUsers() {
   return await res.json();
 }
 
-// Crear usuario
 export async function crearUsuario(usuario) {
   const url = "https://musicapi01-production.up.railway.app/api/users";
 
@@ -35,7 +28,6 @@ export async function crearUsuario(usuario) {
   return await res.json();
 }
 
-// Iniciar sesión (si tu API lo maneja)
 export async function login(email, contrasenia) {
   const url = `https://musicapi01-production.up.railway.app/api/users`;
 

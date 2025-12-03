@@ -27,7 +27,7 @@ export default function SesionPage() {
     setShowToast(true);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -39,28 +39,44 @@ export default function SesionPage() {
       return;
     }
 
-    const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    try {
+      const res = await fetch(
+        "https://musicapi01-production.up.railway.app/api/users"
+      );
 
-    const foundUser = storedUsers.find((user: Usuario) => user.email === email);
+      if (!res.ok) {
+        showToastMsg("Error al conectar con el servidor", "danger");
+        return;
+      }
 
-    if (!foundUser) {
-      showToastMsg("El correo no está registrado", "danger");
-      return;
+      const users = await res.json();
+
+      // 2. Buscar usuario por correo
+      const userFound = users.find((u: any) => u.correo === email);
+
+      if (!userFound) {
+        showToastMsg("El correo no está registrado", "danger");
+        return;
+      }
+
+      // 3. Validar contraseña
+      if (userFound.contrasenia !== password) {
+        showToastMsg("Contraseña incorrecta", "danger");
+        return;
+      }
+
+      // 4. Iniciar sesión
+      localStorage.setItem("logged", "true");
+      localStorage.setItem("currentUser", JSON.stringify(userFound));
+
+      showToastMsg("Bienvenido " + userFound.nombre_user, "success");
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1200);
+    } catch (error) {
+      showToastMsg("Error inesperado", "danger");
     }
-
-    if (foundUser.password !== password) {
-      showToastMsg("Contraseña incorrecta", "danger");
-      return;
-    }
-
-    localStorage.setItem("logged", "true");
-    localStorage.setItem("currentUser", JSON.stringify(foundUser));
-
-    showToastMsg("Bienvenido", "success");
-
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1200);
   };
 
   return (
@@ -73,7 +89,6 @@ export default function SesionPage() {
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
-                id="email"
                 name="email"
                 type="email"
                 placeholder="nombre@ejemplo.com"
@@ -86,7 +101,6 @@ export default function SesionPage() {
             <Form.Group className="mb-3" controlId="password">
               <Form.Label>Contraseña</Form.Label>
               <Form.Control
-                id="password"
                 name="password"
                 type="password"
                 placeholder="••••••••"
