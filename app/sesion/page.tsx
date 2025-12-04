@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Form, Button, Card, Toast } from "react-bootstrap";
 import Link from "next/link";
 
-interface Usuario {
-  nombre: string;
-  email: string;
-  password: string;
-  direccion: string;
+export interface Usuario {
+  id?: number;
+  nombre_user: string;
+  correo: string;
+  contrasenia: string;
   region: string;
   comuna: string;
+  rol: "ADMIN" | "CLIENTE";
 }
 
 export default function SesionPage() {
@@ -43,38 +44,32 @@ export default function SesionPage() {
       const res = await fetch(
         "https://musicapi01-production.up.railway.app/api/users"
       );
-
       if (!res.ok) {
         showToastMsg("Error al conectar con el servidor", "danger");
         return;
       }
 
-      const users = await res.json();
-
-      // 2. Buscar usuario por correo
-      const userFound = users.find((u: any) => u.correo === email);
+      const users: Usuario[] = await res.json();
+      const userFound = users.find((u) => u.correo === email);
 
       if (!userFound) {
         showToastMsg("El correo no está registrado", "danger");
         return;
       }
 
-      // 3. Validar contraseña
       if (userFound.contrasenia !== password) {
         showToastMsg("Contraseña incorrecta", "danger");
         return;
       }
 
-      // 4. Iniciar sesión
       localStorage.setItem("logged", "true");
       localStorage.setItem("currentUser", JSON.stringify(userFound));
-
       showToastMsg("Bienvenido " + userFound.nombre_user, "success");
 
       setTimeout(() => {
         window.location.href = "/";
       }, 1200);
-    } catch (error) {
+    } catch {
       showToastMsg("Error inesperado", "danger");
     }
   };
@@ -84,7 +79,6 @@ export default function SesionPage() {
       <div className="d-flex justify-content-center align-items-center vh-100 bg-black text-white">
         <Card className="p-4 shadow" style={{ width: "450px" }}>
           <h3 className="text-center mb-4 text-white">Inicio de Sesión</h3>
-
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Correo electrónico</Form.Label>

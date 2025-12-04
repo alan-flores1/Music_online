@@ -91,7 +91,7 @@ export default function OfertaPage() {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => agregarCarrito(p.id)}
+                          onClick={() => agregarCarrito(p)}
                         >
                           Comprar
                         </Button>

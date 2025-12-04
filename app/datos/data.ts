@@ -55,13 +55,19 @@ const productosdcto: Producto[] = [
   },
 ];
 
-function agregarCarrito(producto: Producto, cantidad = 1) {
-  const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
+// SIN `any`, usando Producto[] correctamente
+function agregarCarrito(producto: Producto, cantidad: number = 1) {
+  const carrito: Producto[] = JSON.parse(
+    localStorage.getItem("carrito") || "[]"
+  );
 
-  const existente = carrito.find((p: Producto) => p.id === producto.id);
+  const existente = carrito.find((p) => p.id === producto.id);
 
-  if (existente) existente.cantidad += cantidad;
-  else carrito.push({ ...producto, cantidad });
+  if (existente) {
+    existente.cantidad = (existente.cantidad || 0) + cantidad;
+  } else {
+    carrito.push({ ...producto, cantidad });
+  }
 
   localStorage.setItem("carrito", JSON.stringify(carrito));
   alert(`${producto.nombre} añadido al carrito`);

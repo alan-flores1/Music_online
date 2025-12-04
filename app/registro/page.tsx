@@ -69,7 +69,7 @@ export default function RegistroPage() {
       contrasenia: password,
       region: region,
       comuna: comuna,
-      rol: "CLIENTE",
+      rol: "CLIENTE" as const,
     };
 
     const response = await crearUsuario(newUser);
