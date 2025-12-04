@@ -95,11 +95,39 @@ export default function CarritoPage() {
 
       localStorage.setItem("datosCompra", JSON.stringify(datos));
       localStorage.setItem("totalCompra", String(total));
-      localStorage.removeItem("carrito");
-      setShowExito(true);
-      setTimeout(() => {
-        window.location.href = "/carrito/exito";
-      }, 1500);
+
+      const userRaw = localStorage.getItem("currentUser");
+      if (!userRaw) {
+        alert("Debes iniciar sesión antes de comprar");
+        return;
+      }
+      const user = JSON.parse(userRaw);
+
+      const payload = carrito.map((p) => ({
+        productoId: p.id,
+        cantidad: p.cantidad || 1,
+      }));
+
+      fetch(
+        `https://musicapi01-production.up.railway.app/api/boletas/crear/${user.id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      )
+        .then((res) => res.json())
+        .then(() => {
+          localStorage.removeItem("carrito");
+          setShowExito(true);
+          setTimeout(() => {
+            window.location.href = "/carrito/exito";
+          }, 1500);
+        })
+        .catch((err) => {
+          console.error(err);
+          setShowError(true);
+        });
     }, 2000);
   };
 
