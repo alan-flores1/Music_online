@@ -9,6 +9,7 @@ import { Producto } from "@/app/datos/data";
 export default function CarritoPage() {
   const [carrito, setCarrito] = useState<Producto[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [valorDolar, setValorDolar] = useState<number | null>(null);
 
   const [formNombre, setFormNombre] = useState("");
   const [formCorreo, setFormCorreo] = useState("");
@@ -33,6 +34,16 @@ export default function CarritoPage() {
     setTotal(totalCalculado);
   }, [carrito]);
 
+  useEffect(() => {
+    fetch("https://mindicador.cl/api")
+      .then((res) => res.json())
+      .then((data) => {
+        setValorDolar(data.dolar.valor);
+      })
+      .catch((error) => console.error("Error al obtener indicadores:", error));
+  }, []);
+
+  // ... (El resto de tus useEffect y funciones handleSubmitCompra igual que antes)
   useEffect(() => {
     const userRaw = localStorage.getItem("currentUser");
     if (!userRaw) return;
@@ -168,7 +179,8 @@ export default function CarritoPage() {
                                 actualizarCantidad(p.id, (p.cantidad || 1) - 1)
                               }
                             >
-                              -
+                              {" "}
+                              -{" "}
                             </Button>
                             <span>{p.cantidad || 1}</span>
                             <Button
@@ -178,21 +190,38 @@ export default function CarritoPage() {
                                 actualizarCantidad(p.id, (p.cantidad || 1) + 1)
                               }
                             >
-                              +
+                              {" "}
+                              +{" "}
                             </Button>
                             <Button
                               variant="danger"
                               size="sm"
                               onClick={() => eliminarProducto(p.id)}
                             >
-                              Eliminar
+                              {" "}
+                              Eliminar{" "}
                             </Button>
                           </div>
                         </div>
                         <div>
+                          {/* Aquí calculamos individual por producto si quieres */}
                           <strong>
                             ${(p.precio * (p.cantidad || 1)).toLocaleString()}
                           </strong>
+                          {valorDolar && (
+                            <div
+                              style={{
+                                fontSize: "0.8rem",
+                                color: "#aaa",
+                                textAlign: "right",
+                              }}
+                            >
+                              US${" "}
+                              {Math.round(
+                                (p.precio * (p.cantidad || 1)) / valorDolar
+                              )}
+                            </div>
+                          )}
                         </div>
                       </Card.Body>
                     </Card>
@@ -206,17 +235,30 @@ export default function CarritoPage() {
                   <h3 className="text-success fw-bold">
                     ${total.toLocaleString()}
                   </h3>
+
+                  {/* AQUÍ ESTÁ EL CAMBIO PARA QUE SE VEA EL DÓLAR */}
+                  {valorDolar && (
+                    <div className="mt-2 pt-2 border-top border-secondary">
+                      <span style={{ color: "#ccc" }}>
+                        Precio internacional:
+                      </span>
+                      <h4 className="text-white fw-bold">
+                        US$ {Math.round(total / valorDolar)}
+                      </h4>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
+          {/* El resto del formulario de compra igual que siempre */}
           {carrito.length > 0 && (
             <div className="container my-5">
               <div className="card bg-dark text-white p-4 shadow-sm">
                 <h3 className="mb-4">💳 Información de pago</h3>
-
                 <form onSubmit={handleSubmitCompra}>
+                  {/* ... tus inputs de formNombre, correo, etc ... */}
                   <input
                     type="text"
                     name="nombre"
@@ -226,7 +268,6 @@ export default function CarritoPage() {
                     onChange={(e) => setFormNombre(e.target.value)}
                     required
                   />
-
                   <input
                     type="email"
                     name="correo"
@@ -236,7 +277,6 @@ export default function CarritoPage() {
                     onChange={(e) => setFormCorreo(e.target.value)}
                     required
                   />
-
                   <input
                     type="text"
                     name="direccion"
@@ -287,16 +327,15 @@ export default function CarritoPage() {
         </div>
 
         <footer className="footer bg-dark text-white py-4 mt-auto">
+          {/* ... Footer idéntico ... */}
           <Container>
             <Row>
               <Col md={3}>
                 <h2 className="logo">Tienda</h2>
                 <p>
-                  Tienda enfocada en conectar a las personas con la música.
-                  Vinilos, CDs, Blurays y objetos para melómanos.
+                  Tienda enfocada en conectar a las personas con la música...
                 </p>
               </Col>
-
               <Col md={3}>
                 <h3>Enlaces</h3>
                 <ul className="list-unstyled">
@@ -311,13 +350,11 @@ export default function CarritoPage() {
                   </li>
                 </ul>
               </Col>
-
               <Col md={3}>
                 <h3>Contacto</h3>
                 <p>📧 contacto@tienda.cl</p>
                 <p>📞 +56 2 2222 3333</p>
               </Col>
-
               <Col md={3}>
                 <h3>Síguenos</h3>
                 <div className="d-flex flex-column">
@@ -326,7 +363,6 @@ export default function CarritoPage() {
                 </div>
               </Col>
             </Row>
-
             <div className="text-center mt-4 border-top pt-3">
               <p className="mb-0">
                 &copy; 2025 Tienda. Todos los derechos reservados.

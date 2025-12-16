@@ -1,34 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, CSSProperties } from "react";
 import Link from "next/link";
+import { Button } from "react-bootstrap";
 
 export default function ExitoPage() {
   const [nombre, setNombre] = useState("Cliente");
-  const [direccion, setDireccion] = useState("");
-  const [total, setTotal] = useState<string>("0");
+  const [comuna, setComuna] = useState("");
+
+  const [climaDescripcion, setClimaDescripcion] = useState("");
+  const [temperatura, setTemperatura] = useState("");
+  const [cargandoClima, setCargandoClima] = useState(false);
 
   useEffect(() => {
     const datosRaw = localStorage.getItem("datosCompra");
-    const totalRaw = localStorage.getItem("totalCompra");
-    try {
-      const datos = datosRaw ? JSON.parse(datosRaw) : null;
-      if (datos?.nombreCompleto) setNombre(datos.nombreCompleto);
-      if (datos?.direccion) setDireccion(datos.direccion);
-    } catch {}
-    setTotal(totalRaw || "0");
 
-    // (Opcional) Limpia datos de compra después de mostrarlos
-    // setTimeout(() => {
-    //   localStorage.removeItem("datosCompra");
-    //   localStorage.removeItem("totalCompra");
-    // }, 5000);
+    if (datosRaw) {
+      try {
+        const datos = JSON.parse(datosRaw);
+        if (datos.nombreCompleto) setNombre(datos.nombreCompleto);
+
+        if (datos.comuna) {
+          setComuna(datos.comuna);
+          consultarClima(datos.comuna);
+        }
+      } catch (e) {
+        console.error("Error recuperando datos", e);
+      }
+    }
   }, []);
+
+  const consultarClima = (ciudad: string) => {
+    setCargandoClima(true);
+    fetch(`https://wttr.in/${ciudad}?format=j1`)
+      .then((res) => res.json())
+      .then((data) => {
+        const current = data.current_condition[0];
+        setTemperatura(current.temp_C);
+        const desc = current.lang_es ? current.lang_es[0].value : "Despejado";
+        setClimaDescripcion(desc);
+        setCargandoClima(false);
+      })
+      .catch((err) => {
+        console.log("Error API Clima", err);
+        setClimaDescripcion("No disponible por el momento");
+        setCargandoClima(false);
+      });
+  };
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.card} className="shadow-lg">
-        {/* Check animado */}
         <div style={styles.checkWrap}>
           <svg
             viewBox="0 0 120 120"
@@ -39,82 +61,115 @@ export default function ExitoPage() {
             <circle
               cx="60"
               cy="60"
-              r="54"
+              r="50"
               fill="none"
-              stroke="#28a745"
-              strokeWidth="6"
-              style={{
-                opacity: 0.2,
-              }}
+              stroke="#25ff48"
+              strokeWidth="5"
+              style={styles.circleAnim}
             />
-            <circle
-              cx="60"
-              cy="60"
-              r="54"
+            <path
+              d="M35 60 L55 80 L85 40"
               fill="none"
-              stroke="#28a745"
-              strokeWidth="6"
-              strokeDasharray="339.292"
-              strokeDashoffset="339.292"
-              style={{
-                animation: "drawCircle 900ms ease-out forwards",
-              }}
-            />
-            <polyline
-              points="36,64 54,78 84,46"
-              fill="none"
-              stroke="#28a745"
-              strokeWidth="8"
+              stroke="#25ff48"
+              strokeWidth="5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeDasharray="80"
-              strokeDashoffset="80"
-              style={{
-                animation: "drawCheck 700ms 500ms ease-out forwards",
-              }}
+              style={styles.checkAnim}
             />
           </svg>
         </div>
 
-        <h1 style={styles.title}>¡Compra realizada con éxito!</h1>
+        <h1 style={styles.title}>¡Gracias, {nombre}!</h1>
+        <p style={styles.text}>Tu compra ha sido procesada exitosamente.</p>
 
-        <p style={styles.subtitle}>
-          Gracias por tu compra, <strong>{nombre}</strong>.
-        </p>
+        {comuna && (
+          <div
+            className="mt-4 p-3 rounded"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.1)",
+              border: "1px solid #333",
+            }}
+          >
+            <h5
+              className="mb-2 text-muted"
+              style={{ fontSize: "0.9rem", textTransform: "uppercase" }}
+            >
+              Estado del destino: {comuna}
+            </h5>
 
-        <div style={styles.summary}>
-          <h3 style={{ marginBottom: 12 }}>🧾 Resumen</h3>
-          <p style={{ margin: 0 }}>
-            Dirección: <strong>{direccion || "—"}</strong>
-          </p>
-          <p style={{ margin: 0 }}>
-            Total pagado: <strong>${Number(total).toLocaleString()}</strong>
-          </p>
+            {cargandoClima ? (
+              <p className="mb-0 text-white">
+                📡 Consultando satélite meteorológico...
+              </p>
+            ) : temperatura ? (
+              <div className="d-flex align-items-center justify-content-center gap-3">
+                <div style={{ fontSize: "2.5rem" }}>🌡️</div>
+                <div className="text-start">
+                  <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                    {temperatura}°C
+                  </div>
+                  <div style={{ color: "#ccc", textTransform: "capitalize" }}>
+                    {climaDescripcion}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted mb-0">
+                Información del clima no disponible.
+              </p>
+            )}
+
+            <small className="d-block mt-2 text-muted fst-italic">
+              &quot;Ideal para esperar tus vinilos escuchando música&quot;
+            </small>
+          </div>
+        )}
+
+        <div style={{ marginTop: 40 }}>
+          <Link href="/productos">
+            <Button variant="outline-light" className="me-3">
+              Seguir comprando
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button variant="danger">Volver al inicio</Button>
+          </Link>
         </div>
-
-        <Link href="/" style={styles.button}>
-          Volver a la tienda
-        </Link>
       </div>
 
-      {/* Animaciones CSS */}
-      <style>{`
+      <style jsx>{`
         @keyframes drawCircle {
-          to { stroke-dashoffset: 0; }
+          from {
+            stroke-dasharray: 0 314;
+          }
+          to {
+            stroke-dasharray: 314 314;
+          }
         }
         @keyframes drawCheck {
-          to { stroke-dashoffset: 0; }
+          from {
+            stroke-dashoffset: 100;
+          }
+          to {
+            stroke-dashoffset: 0;
+          }
         }
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px) scale(0.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+          from {
+            opacity: 0;
+            transform: translateY(8px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
       `}</style>
     </div>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   wrapper: {
     minHeight: "100vh",
     width: "100%",
@@ -142,30 +197,20 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 16,
   },
   title: {
-    fontSize: 28,
-    margin: "6px 0 4px",
-    fontWeight: 800,
-    letterSpacing: 0.2,
-  },
-  subtitle: {
-    opacity: 0.9,
-    marginBottom: 18,
-  },
-  summary: {
-    textAlign: "left",
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 18,
-  },
-  button: {
-    display: "inline-block",
-    background: "#28a745",
-    color: "white",
-    textDecoration: "none",
-    padding: "10px 18px",
-    borderRadius: 10,
+    fontSize: "2rem",
     fontWeight: 700,
+    marginBottom: 8,
+  },
+  text: {
+    fontSize: "1.1rem",
+    color: "#ccc",
+  },
+  circleAnim: {
+    animation: "drawCircle 0.6s ease-out forwards",
+  },
+  checkAnim: {
+    strokeDasharray: 100,
+    strokeDashoffset: 100,
+    animation: "drawCheck 0.4s 0.6s ease-out forwards",
   },
 };

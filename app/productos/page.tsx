@@ -19,9 +19,10 @@ interface Producto {
 
 interface CarouselCategoriaProps {
   categoria: string;
+  valorDolar: number | null;
 }
 
-function CarouselCategoria({ categoria }: CarouselCategoriaProps) {
+function CarouselCategoria({ categoria, valorDolar }: CarouselCategoriaProps) {
   const [productos, setProductos] = useState<Producto[]>([]);
 
   useEffect(() => {
@@ -54,18 +55,36 @@ function CarouselCategoria({ categoria }: CarouselCategoriaProps) {
                       variant="top"
                       src={p.imagenUrl}
                       alt={p.nombre}
-                      style={{ height: 200, objectFit: "cover" }}
+                      className="card-img-top"
                     />
                     <Card.Body className="text-center p-2">
-                      <Card.Title as="h6">{p.nombre}</Card.Title>
-                      <Card.Text>${p.precio}</Card.Text>
+                      <Card.Title
+                        as="h6"
+                        style={{ height: "20px", overflow: "hidden" }}
+                      >
+                        {p.nombre}
+                      </Card.Title>
+                      <div className="mb-2">
+                        <span className="d-block fw-bold">
+                          ${p.precio.toLocaleString()}
+                        </span>
+                        {valorDolar && (
+                          <small
+                            className="text-secondary"
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            (US$ {Math.round(p.precio / valorDolar)})
+                          </small>
+                        )}
+                      </div>
+
                       <div className="d-flex justify-content-center gap-2">
                         <Button
                           variant="secondary"
                           size="sm"
                           href={`/detalle?id=${p.id}`}
                         >
-                          Ver detalle
+                          Ver
                         </Button>
                         <Button
                           variant="danger"
@@ -88,20 +107,35 @@ function CarouselCategoria({ categoria }: CarouselCategoriaProps) {
 }
 
 export default function ProductosPage() {
+  const [dolar, setDolar] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("https://mindicador.cl/api")
+      .then((res) => res.json())
+      .then((data) => setDolar(data.dolar.valor))
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <>
       <section
         style={{ backgroundColor: "black", color: "white", padding: "40px 0" }}
       >
         <Container>
+          {dolar && (
+            <div className="text-end mb-3 text-secondary">
+              <small>Dólar hoy: ${dolar}</small>
+            </div>
+          )}
+
           <div id="vinilos">
-            <CarouselCategoria categoria="Vinilo" />
+            <CarouselCategoria categoria="Vinilo" valorDolar={dolar} />
           </div>
           <div id="cds">
-            <CarouselCategoria categoria="Cds" />
+            <CarouselCategoria categoria="Cds" valorDolar={dolar} />
           </div>
           <div id="accesorios">
-            <CarouselCategoria categoria="Accesorios" />
+            <CarouselCategoria categoria="Accesorios" valorDolar={dolar} />
           </div>
         </Container>
       </section>
@@ -111,12 +145,8 @@ export default function ProductosPage() {
           <Row>
             <Col md={3}>
               <h2 className="logo">Tienda</h2>
-              <p>
-                Tienda enfocada en conectar a las personas con la música.
-                Vinilos, CDs, Blurays y objetos para melómanos.
-              </p>
+              <p>Tienda enfocada en conectar a las personas con la música...</p>
             </Col>
-
             <Col md={3}>
               <h3>Enlaces</h3>
               <ul className="list-unstyled">
@@ -131,13 +161,11 @@ export default function ProductosPage() {
                 </li>
               </ul>
             </Col>
-
             <Col md={3}>
               <h3>Contacto</h3>
               <p>📧 contacto@tienda.cl</p>
               <p>📞 +56 2 2222 3333</p>
             </Col>
-
             <Col md={3}>
               <h3>Síguenos</h3>
               <div className="d-flex flex-column">
@@ -146,7 +174,6 @@ export default function ProductosPage() {
               </div>
             </Col>
           </Row>
-
           <div className="text-center mt-4 border-top pt-3">
             <p className="mb-0">
               &copy; 2025 Tienda. Todos los derechos reservados.
