@@ -1,56 +1,65 @@
 "use client";
 
-import { useEffect, useState, CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
 
 export default function ExitoPage() {
   const [nombre, setNombre] = useState("Cliente");
   const [comuna, setComuna] = useState("");
-
-  const [climaDescripcion, setClimaDescripcion] = useState("");
-  const [temperatura, setTemperatura] = useState("");
+  const [clima, setClima] = useState<string>("");
+  const [temp, setTemp] = useState<string>("");
   const [cargandoClima, setCargandoClima] = useState(false);
 
   useEffect(() => {
+    // 1. Recuperamos los datos que el usuario ingresó en el Carrito
     const datosRaw = localStorage.getItem("datosCompra");
 
     if (datosRaw) {
       try {
         const datos = JSON.parse(datosRaw);
         if (datos.nombreCompleto) setNombre(datos.nombreCompleto);
-
         if (datos.comuna) {
           setComuna(datos.comuna);
-          consultarClima(datos.comuna);
+          obtenerClima(datos.comuna); // <--- LLAMADA A LA API CON DATOS DEL USUARIO
         }
       } catch (e) {
-        console.error("Error recuperando datos", e);
+        console.error("Error leyendo datos locales", e);
       }
     }
   }, []);
 
-  const consultarClima = (ciudad: string) => {
+  // 2. Función para consultar la API del clima según la comuna del usuario
+  const obtenerClima = (ciudad: string) => {
     setCargandoClima(true);
+    // Usamos wttr.in que devuelve JSON y no pide Key (Seguro y fácil)
+    // format=j1 entrega JSON detallado
     fetch(`https://wttr.in/${ciudad}?format=j1`)
       .then((res) => res.json())
       .then((data) => {
+        // Extraemos la condición actual
         const current = data.current_condition[0];
-        setTemperatura(current.temp_C);
-        const desc = current.lang_es ? current.lang_es[0].value : "Despejado";
-        setClimaDescripcion(desc);
+        const temperatura = current.temp_C;
+        const descripcion = current.lang_es
+          ? current.lang_es[0].value
+          : "Despejado";
+
+        setTemp(temperatura);
+        setClima(descripcion);
         setCargandoClima(false);
       })
       .catch((err) => {
-        console.log("Error API Clima", err);
-        setClimaDescripcion("No disponible por el momento");
+        console.error("No se pudo obtener el clima", err);
         setCargandoClima(false);
+        // Fallback visual si falla la API
+        setClima("No disponible");
       });
   };
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.card} className="shadow-lg">
+        {/* Check animado */}
         <div style={styles.checkWrap}>
           <svg
             viewBox="0 0 120 120"
@@ -65,7 +74,7 @@ export default function ExitoPage() {
               fill="none"
               stroke="#25ff48"
               strokeWidth="5"
-              style={styles.circleAnim}
+              style={styles.circleAnim as any}
             />
             <path
               d="M35 60 L55 80 L85 40"
@@ -74,7 +83,7 @@ export default function ExitoPage() {
               strokeWidth="5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={styles.checkAnim}
+              style={styles.checkAnim as any}
             />
           </svg>
         </div>
@@ -82,46 +91,58 @@ export default function ExitoPage() {
         <h1 style={styles.title}>¡Gracias, {nombre}!</h1>
         <p style={styles.text}>Tu compra ha sido procesada exitosamente.</p>
 
+        {/* 3. SECCIÓN DE INTEGRACIÓN API (CLIMA) */}
         {comuna && (
           <div
-            className="mt-4 p-3 rounded"
             style={{
+              marginTop: "30px",
+              padding: "20px",
               backgroundColor: "rgba(255,255,255,0.1)",
-              border: "1px solid #333",
+              borderRadius: "10px",
+              border: "1px solid #444",
             }}
           >
             <h5
-              className="mb-2 text-muted"
-              style={{ fontSize: "0.9rem", textTransform: "uppercase" }}
+              style={{
+                color: "#aaa",
+                fontSize: "0.9rem",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
             >
-              Estado del destino: {comuna}
+              Reporte de Despacho
             </h5>
+            <p style={{ marginBottom: "5px" }}>
+              Destino: <strong>{comuna}</strong>
+            </p>
 
             {cargandoClima ? (
-              <p className="mb-0 text-white">
-                📡 Consultando satélite meteorológico...
+              <p style={{ color: "#888" }}>
+                Consultando condiciones climáticas...
               </p>
-            ) : temperatura ? (
-              <div className="d-flex align-items-center justify-content-center gap-3">
-                <div style={{ fontSize: "2.5rem" }}>🌡️</div>
-                <div className="text-start">
-                  <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-                    {temperatura}°C
-                  </div>
-                  <div style={{ color: "#ccc", textTransform: "capitalize" }}>
-                    {climaDescripcion}
-                  </div>
+            ) : clima && clima !== "No disponible" ? (
+              <div>
+                <div
+                  style={{
+                    fontSize: "2.5rem",
+                    fontWeight: "bold",
+                    color: "#fff",
+                  }}
+                >
+                  {temp}°C
                 </div>
+                <p style={{ color: "#25ff48", textTransform: "capitalize" }}>
+                  {clima}
+                </p>
+                <small style={{ color: "#aaa", fontStyle: "italic" }}>
+                  "Ideal para esperar tus vinilos escuchando música"
+                </small>
               </div>
             ) : (
-              <p className="text-muted mb-0">
-                Información del clima no disponible.
-              </p>
+              <small style={{ color: "#666" }}>
+                Datos del clima no disponibles por el momento.
+              </small>
             )}
-
-            <small className="d-block mt-2 text-muted fst-italic">
-              &quot;Ideal para esperar tus vinilos escuchando música&quot;
-            </small>
           </div>
         )}
 
@@ -169,7 +190,7 @@ export default function ExitoPage() {
   );
 }
 
-const styles: Record<string, CSSProperties> = {
+const styles: Record<string, React.CSSProperties> = {
   wrapper: {
     minHeight: "100vh",
     width: "100%",

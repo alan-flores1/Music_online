@@ -43,21 +43,29 @@ export default function CarritoPage() {
       .catch((error) => console.error("Error al obtener indicadores:", error));
   }, []);
 
+  // ---------------------------------------------------------
+  // AQUÍ ESTÁ EL ARREGLO DE RM y COLORES
+  // ---------------------------------------------------------
   useEffect(() => {
     const userRaw = localStorage.getItem("currentUser");
     if (!userRaw) return;
     try {
       const user = JSON.parse(userRaw);
 
+      // Mapeamos lo que viene de la BD (izquierda) a lo que espera el Select (derecha)
       const regionMap: Record<string, string> = {
+        // RM
         RM: "Región Metropolitana",
+        rm: "Región Metropolitana",
         Metropolitana: "Región Metropolitana",
         metropolitana: "Región Metropolitana",
 
+        // Valpo
         Valparaiso: "Valparaíso",
         valparaiso: "Valparaíso",
         Valparaíso: "Valparaíso",
 
+        // Biobio
         Biobio: "Biobío",
         biobio: "Biobío",
         Biobío: "Biobío",
@@ -66,11 +74,11 @@ export default function CarritoPage() {
       setFormNombre(user?.nombre || user?.nombre_user || "");
       setFormCorreo(user?.email || user?.correo || "");
       setFormDireccion(user?.direccion || "");
+      setFormComuna(user?.comuna || "");
 
       const regionGuardada = user?.region || "";
+      // Si existe en el mapa, usalo. Si no, usa el original.
       setFormRegion(regionMap[regionGuardada] || regionGuardada);
-
-      setFormComuna(user?.comuna || "");
     } catch {}
   }, []);
 
@@ -130,6 +138,7 @@ export default function CarritoPage() {
         cantidad: p.cantidad || 1,
       }));
 
+      // Usamos user.id (asegúrate que tu user del localStorage tenga 'id')
       const userId = user.id || 1;
 
       fetch(
@@ -150,10 +159,20 @@ export default function CarritoPage() {
         })
         .catch((err) => {
           console.error(err);
-
+          // Si falla la API pero quieres simular éxito para la presentación, descomenta esto:
+          // localStorage.removeItem("carrito");
+          // setShowExito(true);
+          // setTimeout(() => window.location.href = "/carrito/exito", 1500);
           setShowError(true);
         });
     }, 2000);
+  };
+
+  // ESTILO FORZADO PARA QUE SE LEAN LOS INPUTS
+  const inputStyle = {
+    backgroundColor: "#2c3035",
+    color: "#ffffff",
+    border: "1px solid #495057",
   };
 
   return (
@@ -181,6 +200,7 @@ export default function CarritoPage() {
                           width={80}
                           height={80}
                           className="rounded me-3"
+                          style={{ objectFit: "cover" }}
                         />
                         <div className="flex-grow-1">
                           <h5>{p.nombre}</h5>
@@ -266,11 +286,13 @@ export default function CarritoPage() {
               <div className="card bg-dark text-white p-4 shadow-sm">
                 <h3 className="mb-4">💳 Información de pago</h3>
                 <form onSubmit={handleSubmitCompra}>
+                  {/* INPUTS CON ESTILO FORZADO PARA QUE SE LEAN */}
                   <input
                     type="text"
                     name="nombre"
                     placeholder="Nombre completo"
-                    className="form-control mb-3 bg-dark text-white border-secondary"
+                    className="form-control mb-3"
+                    style={inputStyle}
                     value={formNombre}
                     onChange={(e) => setFormNombre(e.target.value)}
                     required
@@ -279,7 +301,8 @@ export default function CarritoPage() {
                     type="email"
                     name="correo"
                     placeholder="Correo electrónico"
-                    className="form-control mb-3 bg-dark text-white border-secondary"
+                    className="form-control mb-3"
+                    style={inputStyle}
                     value={formCorreo}
                     onChange={(e) => setFormCorreo(e.target.value)}
                     required
@@ -288,7 +311,8 @@ export default function CarritoPage() {
                     type="text"
                     name="direccion"
                     placeholder="Dirección"
-                    className="form-control mb-3 bg-dark text-white border-secondary"
+                    className="form-control mb-3"
+                    style={inputStyle}
                     value={formDireccion}
                     onChange={(e) => setFormDireccion(e.target.value)}
                     required
@@ -298,12 +322,15 @@ export default function CarritoPage() {
                     <div className="col-md-6">
                       <select
                         name="region"
-                        className="form-select mb-3 bg-dark text-white border-secondary"
+                        className="form-select mb-3"
+                        style={inputStyle}
                         value={formRegion}
                         onChange={(e) => setFormRegion(e.target.value)}
                         required
                       >
-                        <option value="">Selecciona región</option>
+                        <option value="" style={{ color: "#aaa" }}>
+                          Selecciona región
+                        </option>
                         <option value="Región Metropolitana">
                           Región Metropolitana
                         </option>
@@ -316,7 +343,8 @@ export default function CarritoPage() {
                         type="text"
                         name="comuna"
                         placeholder="Comuna"
-                        className="form-control mb-3 bg-dark text-white border-secondary"
+                        className="form-control mb-3"
+                        style={inputStyle}
                         value={formComuna}
                         onChange={(e) => setFormComuna(e.target.value)}
                         required
