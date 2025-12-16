@@ -43,22 +43,33 @@ export default function CarritoPage() {
       .catch((error) => console.error("Error al obtener indicadores:", error));
   }, []);
 
-  // ... (El resto de tus useEffect y funciones handleSubmitCompra igual que antes)
   useEffect(() => {
     const userRaw = localStorage.getItem("currentUser");
     if (!userRaw) return;
     try {
       const user = JSON.parse(userRaw);
+
       const regionMap: Record<string, string> = {
+        RM: "Región Metropolitana",
+        Metropolitana: "Región Metropolitana",
         metropolitana: "Región Metropolitana",
+
+        Valparaiso: "Valparaíso",
         valparaiso: "Valparaíso",
+        Valparaíso: "Valparaíso",
+
+        Biobio: "Biobío",
         biobio: "Biobío",
+        Biobío: "Biobío",
       };
-      setFormNombre(user?.nombre || "");
-      setFormCorreo(user?.email || "");
+
+      setFormNombre(user?.nombre || user?.nombre_user || "");
+      setFormCorreo(user?.email || user?.correo || "");
       setFormDireccion(user?.direccion || "");
+
       const regionGuardada = user?.region || "";
-      setFormRegion(regionMap[regionGuardada] ?? regionGuardada);
+      setFormRegion(regionMap[regionGuardada] || regionGuardada);
+
       setFormComuna(user?.comuna || "");
     } catch {}
   }, []);
@@ -119,8 +130,10 @@ export default function CarritoPage() {
         cantidad: p.cantidad || 1,
       }));
 
+      const userId = user.id || 1;
+
       fetch(
-        `https://musicapi01-production.up.railway.app/api/boletas/crear/${user.id}`,
+        `https://musicapi01-production.up.railway.app/api/boletas/crear/${userId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -137,6 +150,7 @@ export default function CarritoPage() {
         })
         .catch((err) => {
           console.error(err);
+
           setShowError(true);
         });
     }, 2000);
@@ -179,8 +193,7 @@ export default function CarritoPage() {
                                 actualizarCantidad(p.id, (p.cantidad || 1) - 1)
                               }
                             >
-                              {" "}
-                              -{" "}
+                              -
                             </Button>
                             <span>{p.cantidad || 1}</span>
                             <Button
@@ -190,21 +203,18 @@ export default function CarritoPage() {
                                 actualizarCantidad(p.id, (p.cantidad || 1) + 1)
                               }
                             >
-                              {" "}
-                              +{" "}
+                              +
                             </Button>
                             <Button
                               variant="danger"
                               size="sm"
                               onClick={() => eliminarProducto(p.id)}
                             >
-                              {" "}
-                              Eliminar{" "}
+                              Eliminar
                             </Button>
                           </div>
                         </div>
                         <div>
-                          {/* Aquí calculamos individual por producto si quieres */}
                           <strong>
                             ${(p.precio * (p.cantidad || 1)).toLocaleString()}
                           </strong>
@@ -216,7 +226,7 @@ export default function CarritoPage() {
                                 textAlign: "right",
                               }}
                             >
-                              US${" "}
+                              US$
                               {Math.round(
                                 (p.precio * (p.cantidad || 1)) / valorDolar
                               )}
@@ -236,7 +246,6 @@ export default function CarritoPage() {
                     ${total.toLocaleString()}
                   </h3>
 
-                  {/* AQUÍ ESTÁ EL CAMBIO PARA QUE SE VEA EL DÓLAR */}
                   {valorDolar && (
                     <div className="mt-2 pt-2 border-top border-secondary">
                       <span style={{ color: "#ccc" }}>
@@ -252,13 +261,11 @@ export default function CarritoPage() {
             </div>
           </div>
 
-          {/* El resto del formulario de compra igual que siempre */}
           {carrito.length > 0 && (
             <div className="container my-5">
               <div className="card bg-dark text-white p-4 shadow-sm">
                 <h3 className="mb-4">💳 Información de pago</h3>
                 <form onSubmit={handleSubmitCompra}>
-                  {/* ... tus inputs de formNombre, correo, etc ... */}
                   <input
                     type="text"
                     name="nombre"
@@ -327,7 +334,6 @@ export default function CarritoPage() {
         </div>
 
         <footer className="footer bg-dark text-white py-4 mt-auto">
-          {/* ... Footer idéntico ... */}
           <Container>
             <Row>
               <Col md={3}>
