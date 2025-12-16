@@ -74,7 +74,7 @@ export default function ExitoPage() {
               fill="none"
               stroke="#25ff48"
               strokeWidth="5"
-              style={styles.circleAnim as any}
+              style={styles.circleAnim}
             />
             <path
               d="M35 60 L55 80 L85 40"
@@ -83,7 +83,7 @@ export default function ExitoPage() {
               strokeWidth="5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={styles.checkAnim as any}
+              style={styles.checkAnim}
             />
           </svg>
         </div>
@@ -135,7 +135,7 @@ export default function ExitoPage() {
                   {clima}
                 </p>
                 <small style={{ color: "#aaa", fontStyle: "italic" }}>
-                  "Ideal para esperar tus vinilos escuchando música"
+                  &quot;Ideal para esperar tus vinilos escuchando música&quot;
                 </small>
               </div>
             ) : (
